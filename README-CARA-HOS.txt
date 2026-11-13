@@ -3,7 +3,7 @@ ARKED FARMASI - ZARIF ZAINOL (RPh 25633)
 
 Isi folder:
   index.html          Laman utama (profil + koleksi game)
-  games/              6 fail game (setiap satu ada kredit pencipta)
+  games/              4 fail game (setiap satu ada kredit pencipta)
   img/                Gambar skrin game
 
 MENAMBAH GAMBAR MUKA:

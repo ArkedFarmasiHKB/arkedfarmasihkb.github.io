@@ -7,7 +7,7 @@
 <meta name="description" content="Koleksi game pendidikan farmasi pixel-art oleh Zarif Zainol (RPh 25633), Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang.">
 <meta name="author" content="ZARIF ZAINOL, RPh 25633, Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang">
 <meta property="og:title" content="Arked Farmasi Zarif Zainol">
-<meta property="og:description" content="6 game pendidikan ubat percuma. Main online atau muat turun untuk panel pintar.">
+<meta property="og:description" content="4 game pendidikan ubat percuma. Main online atau muat turun untuk panel pintar.">
 <meta property="og:image" content="img/kaunter-demam.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,7 +84,7 @@ section{padding-block:40px 0}
 .filters{display:flex;gap:8px;flex-wrap:wrap}
 .filters button{font-family:var(--font-ui);font-weight:700;font-size:15px;padding:5px 12px;border:3px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.3)}
 .filters button[aria-pressed="true"]{background:linear-gradient(#ffe27a,var(--yellow));}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:26px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
 .card{display:flex;flex-direction:column;min-width:0}
 .card[hidden]{display:none}
 .shot{position:relative;border-bottom:4px solid var(--ink);aspect-ratio:16/9;overflow:hidden;background:var(--navy)}
@@ -160,7 +160,7 @@ footer{padding-block:40px 32px}
   <div class="hero panel">
     <div class="ribbon">PENCIPTA</div>
     <div class="photo">
-      <img src="img/foto-zarif.jpg" alt="Gambar Zarif Zainol" onerror="this.remove()">
+      <img src="img/foto-zarif.jpg" alt="Zarif Zainol bersama isteri" onerror="this.remove()">
       <div class="ini" aria-hidden="true">ZZ</div>
       <svg class="star px" viewBox="0 0 11 11" aria-hidden="true" shape-rendering="crispEdges"><path fill="#2a1f22" d="M4 0h3v2h4v3H10v1H9v2h1v3H7V10H4v1H1V8h1V6H1V5H0V2h4z"/><path fill="#ffd23a" d="M5 1h1v2h4v1H9v1H8v1h1v1h1v1H9v1H7V9H4v1H2V9h1V7H2V6h1V5H2V4H1V3h4z"/><path fill="#fff6b0" d="M5 1h1v2H5zM2 3h2v1H2z"/></svg>
     </div>
@@ -171,7 +171,7 @@ footer{padding-block:40px 32px}
       <p class="place">Hospital Kepala Batas, Pulau Pinang</p>
       <p class="hello">Hai, saya Zarif!</p>
       <p class="lead">Terima kasih kerana singgah. Saya mencipta game pixel-art ini supaya belajar tentang ubat jadi lebih seronok, untuk orang awam, pesakit, kanak-kanak dan warga kesihatan. Semua game percuma: main terus di laman ini, atau muat turun untuk panel pintar dan komputer.</p>
-      <div class="chips"><span class="chip"><b>6</b> game</span><span class="chip">Percuma</span><span class="chip">Boleh main tanpa internet</span><span class="chip">Sesuai untuk panel pintar</span></div>
+      <div class="chips"><span class="chip"><b>4</b> game</span><span class="chip">Percuma</span><span class="chip">Boleh main tanpa internet</span><span class="chip">Sesuai untuk panel pintar</span></div>
       <div class="cta"><a class="btn play" href="#game">▶ Lihat koleksi game</a><a class="btn ghost" href="#hubungi">Hubungi saya</a></div>
     </div>
   </div>
@@ -243,14 +243,8 @@ const GAMES=[
  {id:'jom-kuiz-ubat',t:'Jom Kuiz Ubat',meta:'3 tahap · 60 soalan',tags:['staf'],
   d:'Kuiz kad pusing tentang keselamatan ubat asas: HAMS, jenis ralat ubat, MERS dan Matlamat Keselamatan Pesakit Malaysia. Soalan dalam Bahasa Inggeris.',
   src:'Sumber: Malaysia Basic Medication Safety Module Part I (bank soalan).'},
- {id:'troli-selamat',t:'Troli Selamat',meta:'Syif 3 minit · 3 tahap kesukaran',tags:['staf'],
-  d:'Beri ubat dari troli wad kepada pesakit. Kenal pasti ubat LASA, buat semakan berganda untuk HAMS dan baca label Tall Man sebelum memberi ubat.',
-  src:'Senarai LASA & Tall Man: Hospital Kepala Batas, kemas kini April 2026.'},
  {id:'perangkap-kuman',t:'Perangkap Kuman',meta:'3 tahap · Bahasa Melayu / English',tags:['kanak','awam'],
   d:'Kepung kuman dengan sabun sebelum ia terlepas, sambil belajar tip basuh tangan dan cara menggunakan ubat dengan betul.'},
- {id:'little-thala-explorer',t:'Little Thala Explorer',meta:'4 zon pengembaraan',tags:['kanak','awam'],
-  d:'Pengembaraan pendidikan talasemia untuk kanak-kanak dan penjaga: cara mengambil ubat penyingkir zat besi, pilihan makanan, ujian pemantauan dan tanda amaran.',
-  src:'Kandungan berdasarkan buku Little Thala Explorer, Jabatan Farmasi HRPZ II.'}
 ];
 const TAGN={awam:'Orang awam',staf:'Warga kesihatan',kanak:'Kanak-kanak'};
 const grid=document.getElementById('grid');
@@ -268,7 +262,7 @@ grid.innerHTML=GAMES.map((g,i)=>`
     <a class="btn play" href="games/${g.id}.html" target="_blank" rel="noopener">▶ Main online</a>
     <a class="btn dl" href="games/${g.id}.html" download="${g.t.replace(/\s+/g,'-')}.html">⬇ Muat turun</a>
    </div>
-   <p class="cr">Dicipta oleh ZARIF ZAINOL (RPh 25633)</p>
+   <p class="cr">Dicipta oleh Zarif Zainol, RPh 25633</p>
   </div>
  </article>`).join('');
 document.querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click',async()=>{
