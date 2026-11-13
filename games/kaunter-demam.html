@@ -357,7 +357,7 @@ const KIDS = [['Adam Haikal','m','ml'],['Nur Aisyah','h','ml'],['Ethan Tan','m',
 const SKIN = {ml:['#e9b892','#d9a27b','#c78d64'],cn:['#f7dcc0','#f0cba8','#e8bf98'],in:['#b98058','#9c6a46','#82563a']};
 
 const MODES = {
-  mudah:{label:'Mudah',desc:'Jumlah ubat sudah ditulis. Pesakit lebih sabar. Tap preskripsi untuk petunjuk.',stars:1,lines:[1,2],patience:70,showTotal:true,abbr:false,hint:true,target:8},
+  mudah:{label:'Mudah',desc:'Jumlah ubat sudah ditulis. Tap preskripsi untuk petunjuk. Kesabaran pesakit tidak menentu!',stars:1,lines:[1,2],patience:52,pvar:[.45,1.25],showTotal:true,abbr:false,hint:true,target:8},
   sederhana:{label:'Sederhana',desc:'Kira sendiri jumlah biji dan botol daripada dos, kekerapan dan tempoh.',stars:2,lines:[2,3],patience:58,showTotal:false,abbr:false,hint:false,target:7},
   pakar:{label:'Pakar',desc:'Singkatan sebenar (TDS, QID, 5/7) dan dos dalam mg. Pesakit kurang sabar.',stars:3,lines:[2,4],patience:48,showTotal:false,abbr:true,hint:false,target:6},
 };
@@ -794,7 +794,7 @@ function loop(now){
 function spawn(i){
   const M=MODES[S.mode],p=makePatient(S.mode);
   /* each patient brings a different amount of patience */
-  p.max=Math.round(M.patience*rf(.6,1.4))+(p.lines.length-1)*6;p.patience=p.max;
+  const pv=M.pvar||[.6,1.4];p.max=Math.round(M.patience*rf(pv[0],pv[1]))+(p.lines.length-1)*6;p.patience=p.max;
   /* random mood thresholds: some skip sadness and go straight to angry, some turn neutral early */
   const t0=rf(.55,.85),t1=rf(.3,Math.min(.55,t0-.1)),t2=rf(.1,Math.min(.28,t1-.05));
   const r=Math.random();
@@ -1050,7 +1050,7 @@ function renderStart(){
    <div class="note">${creditLine()}<small>Untuk pendidikan dan latihan. Dos dipermudahkan, bukan rujukan klinikal.</small></div>
    <button class="pbtn b fsbtn" id="fsbtn">${fsLabel()}</button>
    <button class="pbtn crbtn" id="crbtn">Kredit</button>
-   <div class="ver">Versi 1.5</div>`;
+   <div class="ver">Versi 1.6</div>`;
   $('#layer').appendChild(ov);
   const fb=ov.querySelector('#fsbtn');if(fb)fb.onclick=toggleFS;ov.querySelector('#crbtn').onclick=showCredits;
   drawMenuBG(ov.querySelector('#menubg'));
