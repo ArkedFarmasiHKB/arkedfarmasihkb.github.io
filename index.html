@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Arked Farmasi Zarif Zainol</title>
+<meta name="description" content="Koleksi game pendidikan farmasi pixel-art oleh Zarif Zainol (RPh 25633), Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang.">
+<meta name="author" content="ZARIF ZAINOL, RPh 25633, Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang">
+<meta property="og:title" content="Arked Farmasi Zarif Zainol">
+<meta property="og:description" content="6 game pendidikan ubat percuma. Main online atau muat turun untuk panel pintar.">
+<meta property="og:image" content="img/kaunter-demam.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bungee&family=Pixelify+Sans:wght@500;600;700&display=swap">
+<style>
+/* Layout: retro arcade "cabinet" page — profile marquee on top, game cartridges in a responsive grid, how-to strip, credit footer. One committed look (royal blue + cream), no theme switching. */
+:root{
+  --royal:#1769b0; --royal-deep:#0f3f74; --navy:#0c2a50;
+  --sky:#4aa3df; --orange:#f2752e; --yellow:#e8b830; --green:#3fae6a; --red:#e2474f; --teal:#168f83;
+  --cream:#fff0cf; --cream-hi:#fffaf0; --cream-lo:#f1dcae; --ink:#2a1f22; --muted:#6b5d55;
+  --font-ui:"Pixelify Sans","Courier New",monospace;
+  --font-logo:"Bungee","Arial Black",sans-serif;
+  --font-read:"Atkinson Hyperlegible","Verdana",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:var(--font-read);font-size:16px;line-height:1.5;
+  background:var(--royal-deep);
+  background-image:repeating-conic-gradient(#14508e 0 25%,#0f4580 0 50%);background-size:24px 24px}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:4px solid #ffe15a;outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.px{image-rendering:pixelated}
+
+/* pixel panel + arcade buttons */
+.panel{background:linear-gradient(var(--cream-hi),var(--cream) 55%,var(--cream-lo));border:4px solid var(--ink);
+  box-shadow:inset 4px 4px 0 rgba(255,255,255,.8),inset -4px -4px 0 rgba(160,100,30,.18),6px 6px 0 rgba(0,0,0,.35)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-family:var(--font-ui);font-weight:700;font-size:18px;
+  padding:9px 16px;border:4px solid var(--ink);color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);cursor:pointer;
+  box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),inset -3px -3px 0 rgba(0,0,0,.2),4px 4px 0 rgba(0,0,0,.35);transition:transform .08s steps(2)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translate(3px,3px);box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),1px 1px 0 rgba(0,0,0,.35)}
+.btn.play{background:linear-gradient(#8ae6a4,var(--green) 55%,#2a8a50)}
+.btn.dl{background:linear-gradient(#8dcdf4,var(--sky) 50%,var(--royal))}
+.btn.ghost{background:linear-gradient(#fff,#f3e7cf);color:var(--ink);text-shadow:none}
+
+/* ---------- marquee / profile ---------- */
+.top{padding-block:28px 8px}
+.brandbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.brand{font-family:var(--font-logo);font-size:22px;color:#fff;letter-spacing:1px;text-shadow:3px 3px 0 var(--ink)}
+.brand span:nth-child(4n+1){color:var(--sky)}.brand span:nth-child(4n+2){color:var(--orange)}.brand span:nth-child(4n+3){color:var(--yellow)}.brand span:nth-child(4n){color:#7ddc98}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.nav a{font-family:var(--font-ui);font-weight:700;color:#fff;text-decoration:none;font-size:16px;padding:4px 10px;border:3px solid rgba(255,255,255,.5)}
+.nav a:hover{background:rgba(255,255,255,.15)}
+
+.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center;padding:26px 28px;position:relative}
+.ribbon{position:absolute;left:24px;top:-18px;background:linear-gradient(#ffad74,var(--orange) 55%,#cf5615);color:#fff;border:4px solid var(--ink);
+  font-family:var(--font-ui);font-weight:700;font-size:15px;letter-spacing:2px;padding:2px 14px;text-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.photo{width:210px;aspect-ratio:1;position:relative;border:6px solid var(--ink);background:linear-gradient(#bfe8ff,#86c8f0);
+  box-shadow:0 0 0 6px var(--cream-hi),0 0 0 10px var(--ink),8px 10px 0 10px rgba(0,0,0,.28)}
+.photo img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover}
+.photo .star{z-index:2}
+.photo .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-logo);font-size:72px;color:#fff;text-shadow:5px 5px 0 var(--royal)}
+.photo .star{position:absolute;right:-22px;bottom:-18px;width:56px;height:56px}
+.eyebrow{font-family:var(--font-ui);font-weight:700;font-size:15px;letter-spacing:3px;text-transform:uppercase;color:#a5651c;margin:0}
+.name{font-family:var(--font-logo);font-weight:400;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1;margin:6px 0 10px;color:var(--royal);
+  text-shadow:4px 4px 0 #bcdcf6;letter-spacing:1px;text-wrap:balance}
+.badges{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.rph{font-family:var(--font-logo);font-size:16px;color:#a3430b;background:linear-gradient(#ffe6c2,#ffc58a);border:3px solid #a3430b;padding:2px 10px}
+.role{font-family:var(--font-ui);font-weight:700;font-size:22px}
+.place{font-size:17px;color:var(--muted);margin:0 0 12px}
+.lead{max-width:60ch;margin:0 0 16px;font-size:17px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--font-ui);font-weight:700;font-size:15px;background:#fff;border:3px solid var(--ink);padding:3px 10px;box-shadow:3px 3px 0 rgba(0,0,0,.2)}
+.chip b{font-family:var(--font-logo);font-weight:400;color:var(--royal)}
+
+/* ---------- games ---------- */
+section{padding-block:40px 0}
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.sechead h2{margin:0;font-family:var(--font-logo);font-weight:400;font-size:clamp(1.6rem,3.6vw,2.2rem);color:#fff;text-shadow:4px 4px 0 var(--ink);letter-spacing:1px}
+.sechead p{margin:4px 0 0;color:#d6e8fa;max-width:60ch}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{font-family:var(--font-ui);font-weight:700;font-size:15px;padding:5px 12px;border:3px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.3)}
+.filters button[aria-pressed="true"]{background:linear-gradient(#ffe27a,var(--yellow));}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:26px}
+.card{display:flex;flex-direction:column;min-width:0}
+.card[hidden]{display:none}
+.shot{position:relative;border-bottom:4px solid var(--ink);aspect-ratio:16/9;overflow:hidden;background:var(--navy)}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .25s steps(3)}
+.card:hover .shot img{transform:scale(1.04)}
+.num{position:absolute;left:10px;top:10px;font-family:var(--font-logo);font-size:15px;color:#fff;background:var(--ink);padding:2px 8px}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{margin:0;font-family:var(--font-logo);font-weight:400;font-size:22px;line-height:1.1;color:var(--ink)}
+.meta{font-family:var(--font-ui);font-weight:700;font-size:14px;color:var(--teal-d,#0f6a61)}
+.desc{margin:0;font-size:15px;line-height:1.45}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--font-ui);font-weight:700;font-size:13px;border:2px solid var(--ink);padding:0 7px;background:#fff}
+.tag.awam{background:#d9f2e3}.tag.staf{background:#dbeafb}.tag.kanak{background:#ffe7c7}
+.src{font-size:12.5px;color:var(--muted);margin:0}
+.acts{display:flex;gap:10px;margin-top:auto;padding-top:6px;flex-wrap:wrap}
+.acts .btn{flex:1;min-width:130px;white-space:nowrap;font-size:16px;padding:9px 10px}
+.cr{font-size:12px;color:var(--muted);border-top:2px dashed rgba(42,31,34,.2);padding-top:8px;margin:2px 0 0}
+
+/* ---------- how-to ---------- */
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:22px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .n{flex:none;width:40px;height:40px;display:grid;place-items:center;font-family:var(--font-logo);font-size:18px;color:#fff;background:var(--orange);border:3px solid var(--ink)}
+.step h3{margin:0 0 2px;font-family:var(--font-ui);font-weight:700;font-size:19px}
+.step p{margin:0;font-size:15px;color:var(--muted)}
+.note{margin:14px 22px 0;font-size:14px;color:var(--muted)}
+
+/* ---------- hero CTA ---------- */
+.hello{font-family:var(--font-ui);font-weight:700;font-size:24px;color:var(--orange);margin:0 0 6px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.cta .btn{font-size:17px}
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;padding:24px;align-items:center}
+.contact h3{margin:0 0 8px;font-family:var(--font-logo);font-weight:400;font-size:24px;color:var(--royal)}
+.contact p{margin:0 0 6px;max-width:52ch}
+.ways{display:grid;gap:14px}
+.way{display:flex;align-items:center;gap:14px;background:#fff;border:4px solid var(--ink);padding:12px 14px;box-shadow:4px 4px 0 rgba(0,0,0,.25);min-width:0}
+.way .ic{flex:none;width:48px;height:48px;display:grid;place-items:center;border:3px solid var(--ink)}
+.way .ic svg{width:30px;height:30px}
+.way.mail .ic{background:linear-gradient(#ffad74,var(--orange))}
+.way.wa .ic{background:linear-gradient(#8ae6a4,var(--green))}
+.way .txt{flex:1;min-width:0}
+.way small{display:block;font-family:var(--font-ui);font-weight:700;font-size:13px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.way a.v{font-family:var(--font-ui);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
+.way a.v:hover{color:var(--royal);text-decoration:underline}
+.copy-btn{flex:none;font-family:var(--font-ui);font-weight:700;font-size:14px;padding:6px 10px;border:3px solid var(--ink);background:linear-gradient(#fff,#f3e7cf);cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.copy-btn.ok{background:linear-gradient(#c9f2d6,#8ae6a4)}
+@media (max-width:720px){.contact{grid-template-columns:minmax(0,1fr)}.cta{justify-content:center}}
+/* ---------- footer ---------- */
+footer{padding-block:40px 32px}
+.foot{padding:20px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.foot .who{font-family:var(--font-ui);font-weight:700;font-size:17px}
+.foot .who b{color:var(--royal)}
+.foot p{margin:4px 0 0;font-size:14px;color:var(--muted);max-width:70ch}
+.copy{font-family:var(--font-logo);font-size:14px;color:var(--ink)}
+
+@media (max-width:720px){
+  .hero{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:30px 18px 22px}
+  .badges,.chips{justify-content:center}
+  .photo{width:170px}
+  .how{grid-template-columns:minmax(0,1fr)}
+  .grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <div class="brandbar">
+    <div class="brand" aria-label="Arked Farmasi"><span>A</span><span>R</span><span>K</span><span>E</span><span>D</span> <span>F</span><span>A</span><span>R</span><span>M</span><span>A</span><span>S</span><span>I</span></div>
+    <nav class="nav" aria-label="Navigasi"><a href="#game">Game</a><a href="#cara">Cara guna</a><a href="#hubungi">Hubungi</a></nav>
+  </div>
+
+  <div class="hero panel">
+    <div class="ribbon">PENCIPTA</div>
+    <div class="photo">
+      <img src="img/foto-zarif.jpg" alt="Gambar Zarif Zainol" onerror="this.remove()">
+      <div class="ini" aria-hidden="true">ZZ</div>
+      <svg class="star px" viewBox="0 0 11 11" aria-hidden="true" shape-rendering="crispEdges"><path fill="#2a1f22" d="M4 0h3v2h4v3H10v1H9v2h1v3H7V10H4v1H1V8h1V6H1V5H0V2h4z"/><path fill="#ffd23a" d="M5 1h1v2h4v1H9v1H8v1h1v1h1v1H9v1H7V9H4v1H2V9h1V7H2V6h1V5H2V4H1V3h4z"/><path fill="#fff6b0" d="M5 1h1v2H5zM2 3h2v1H2z"/></svg>
+    </div>
+    <div>
+      <p class="eyebrow">Selamat datang ke Arked Farmasi</p>
+      <h1 class="name">ZARIF ZAINOL</h1>
+      <div class="badges"><span class="rph">RPh 25633</span><span class="role">Pegawai Farmasi</span></div>
+      <p class="place">Hospital Kepala Batas, Pulau Pinang</p>
+      <p class="hello">Hai, saya Zarif!</p>
+      <p class="lead">Terima kasih kerana singgah. Saya mencipta game pixel-art ini supaya belajar tentang ubat jadi lebih seronok, untuk orang awam, pesakit, kanak-kanak dan warga kesihatan. Semua game percuma: main terus di laman ini, atau muat turun untuk panel pintar dan komputer.</p>
+      <div class="chips"><span class="chip"><b>6</b> game</span><span class="chip">Percuma</span><span class="chip">Boleh main tanpa internet</span><span class="chip">Sesuai untuk panel pintar</span></div>
+      <div class="cta"><a class="btn play" href="#game">▶ Lihat koleksi game</a><a class="btn ghost" href="#hubungi">Hubungi saya</a></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="game" aria-labelledby="gameH">
+    <div class="sechead">
+      <div><h2 id="gameH">Koleksi Game</h2><p>Pilih game, tekan <b>Main online</b> untuk terus bermain, atau <b>Muat turun</b> untuk simpan failnya.</p></div>
+      <div class="filters" role="group" aria-label="Tapis ikut sasaran">
+        <button type="button" data-f="all" aria-pressed="true">Semua</button>
+        <button type="button" data-f="awam" aria-pressed="false">Orang awam</button>
+        <button type="button" data-f="staf" aria-pressed="false">Warga kesihatan</button>
+        <button type="button" data-f="kanak" aria-pressed="false">Kanak-kanak</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="cara" aria-labelledby="caraH">
+    <div class="sechead"><div><h2 id="caraH">Main di panel pintar</h2><p>Setiap game ialah satu fail HTML. Tiada pemasangan diperlukan.</p></div></div>
+    <div class="panel">
+      <div class="how">
+        <div class="step"><span class="n">1</span><div><h3>Muat turun</h3><p>Tekan <b>Muat turun</b> pada game pilihan. Fail .html disimpan dalam folder Downloads.</p></div></div>
+        <div class="step"><span class="n">2</span><div><h3>Salin ke peranti</h3><p>Pindahkan fail ke panel pintar atau komputer melalui pendrive, Google Drive atau WhatsApp.</p></div></div>
+        <div class="step"><span class="n">3</span><div><h3>Buka dengan Chrome</h3><p>Tekan fail itu dan pilih Chrome. Gunakan butang skrin penuh jika ada, atau tekan F11 di komputer.</p></div></div>
+      </div>
+      <p class="note">Tanpa internet, game tetap boleh dimain, tetapi huruf akan nampak lebih ringkas kerana fon dimuat dari internet.</p>
+    </div>
+  </section>
+  <section id="hubungi" aria-labelledby="hubH">
+    <div class="sechead"><div><h2 id="hubH">Jom berhubung</h2><p>Untuk kolaborasi, jemputan atau sekadar berkongsi idea.</p></div></div>
+    <div class="panel contact">
+      <div>
+        <h3>Mari bekerjasama</h3>
+        <p>Berminat menggunakan game ini di hospital, klinik atau sekolah anda? Ada idea untuk game pendidikan ubat yang baharu, atau mahu bekerjasama dalam projek kesihatan? Saya sangat mengalu-alukan anda menghubungi saya.</p>
+        <p>Maklum balas tentang game juga sangat dihargai.</p>
+      </div>
+      <div class="ways">
+        <div class="way mail"><span class="ic" aria-hidden="true"><svg viewBox="0 0 10 8" shape-rendering="crispEdges"><path fill="#fff" d="M0 0h10v8H0z"/><path fill="#2a1f22" d="M0 0h10v1H9v1H8v1H7v1H6v1H4V4H3V3H2V2H1V1H0zM0 7h10v1H0z"/></svg></span>
+          <div class="txt"><small>E-mel</small><a class="v" href="mailto:zarif@moh.gov.my">zarif@moh.gov.my</a></div>
+          <button class="copy-btn" type="button" data-copy="zarif@moh.gov.my">Salin</button></div>
+        <div class="way wa"><span class="ic" aria-hidden="true"><svg viewBox="0 0 11 10" shape-rendering="crispEdges"><path fill="#fff" d="M1 0h9v1h1v5h-1v1H5v1H4v1H3v1H2V7H1V6H0V1h1z"/><path fill="#2a1f22" d="M2 3h1v1H2zM5 3h1v1H5zM8 3h1v1H8z"/></svg></span>
+          <div class="txt"><small>WhatsApp</small><a class="v" href="https://wa.me/60135879478" target="_blank" rel="noopener">013-587 9478</a></div>
+          <button class="copy-btn" type="button" data-copy="0135879478">Salin</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap" id="kredit">
+  <div class="panel foot">
+    <div>
+      <div class="who">Dicipta oleh <b>ZARIF ZAINOL</b> (RPh 25633) · Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang</div>
+      <p>E-mel: zarif@moh.gov.my · WhatsApp: 013-587 9478</p>
+      <p>Semua game untuk pendidikan dan latihan sahaja. Dos dan maklumat ubat telah dipermudahkan dan bukan pengganti nasihat doktor atau ahli farmasi.</p>
+    </div>
+    <div class="copy">© 2026 ZARIF ZAINOL</div>
+  </div>
+</footer>
+
+<script>
+const GAMES=[
+ {id:'kaunter-demam',t:'Kaunter Demam',meta:'Syif 3 minit · 3 tahap kesukaran',tags:['awam','staf'],
+  d:'Jadi pegawai farmasi di kaunter demam. Baca preskripsi, kira jumlah biji dan botol, layan dua pesakit serentak dan pujuk pesakit yang tidak sabar.'},
+ {id:'jom-susun-ubat',t:'Jom Susun Ubat',meta:'Misi 15 minit',tags:['staf'],
+  d:'Audit troli ubat sementara di pusat pemindahan. Betulkan label Tall Man, tampal tag LASA dan HAMS, dan jarakkan ubat yang rupanya serupa.',
+  src:'Rujukan: Senarai LASA & HAM, Unit Farmasi PKD Seberang Perai Utara, Bil 1/2026.'},
+ {id:'jom-kuiz-ubat',t:'Jom Kuiz Ubat',meta:'3 tahap · 60 soalan',tags:['staf'],
+  d:'Kuiz kad pusing tentang keselamatan ubat asas: HAMS, jenis ralat ubat, MERS dan Matlamat Keselamatan Pesakit Malaysia. Soalan dalam Bahasa Inggeris.',
+  src:'Sumber: Malaysia Basic Medication Safety Module Part I (bank soalan).'},
+ {id:'troli-selamat',t:'Troli Selamat',meta:'Syif 3 minit · 3 tahap kesukaran',tags:['staf'],
+  d:'Beri ubat dari troli wad kepada pesakit. Kenal pasti ubat LASA, buat semakan berganda untuk HAMS dan baca label Tall Man sebelum memberi ubat.',
+  src:'Senarai LASA & Tall Man: Hospital Kepala Batas, kemas kini April 2026.'},
+ {id:'perangkap-kuman',t:'Perangkap Kuman',meta:'3 tahap · Bahasa Melayu / English',tags:['kanak','awam'],
+  d:'Kepung kuman dengan sabun sebelum ia terlepas, sambil belajar tip basuh tangan dan cara menggunakan ubat dengan betul.'},
+ {id:'little-thala-explorer',t:'Little Thala Explorer',meta:'4 zon pengembaraan',tags:['kanak','awam'],
+  d:'Pengembaraan pendidikan talasemia untuk kanak-kanak dan penjaga: cara mengambil ubat penyingkir zat besi, pilihan makanan, ujian pemantauan dan tanda amaran.',
+  src:'Kandungan berdasarkan buku Little Thala Explorer, Jabatan Farmasi HRPZ II.'}
+];
+const TAGN={awam:'Orang awam',staf:'Warga kesihatan',kanak:'Kanak-kanak'};
+const grid=document.getElementById('grid');
+grid.innerHTML=GAMES.map((g,i)=>`
+ <article class="card panel" data-tags="${g.tags.join(' ')}">
+  <a class="shot" href="games/${g.id}.html" target="_blank" rel="noopener" aria-label="Main ${g.t}">
+   <img src="img/${g.id}.jpg" alt="Skrin utama ${g.t}" loading="lazy"><span class="num">${String(i+1).padStart(2,'0')}</span></a>
+  <div class="body">
+   <h3>${g.t}</h3>
+   <div class="meta">${g.meta}</div>
+   <div class="tags">${g.tags.map(t=>`<span class="tag ${t}">${TAGN[t]}</span>`).join('')}</div>
+   <p class="desc">${g.d}</p>
+   ${g.src?`<p class="src">${g.src}</p>`:''}
+   <div class="acts">
+    <a class="btn play" href="games/${g.id}.html" target="_blank" rel="noopener">▶ Main online</a>
+    <a class="btn dl" href="games/${g.id}.html" download="${g.t.replace(/\s+/g,'-')}.html">⬇ Muat turun</a>
+   </div>
+   <p class="cr">Dicipta oleh ZARIF ZAINOL (RPh 25633)</p>
+  </div>
+ </article>`).join('');
+document.querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click',async()=>{
+  const v=b.dataset.copy,done=()=>{b.textContent='Disalin';b.classList.add('ok');setTimeout(()=>{b.textContent='Salin';b.classList.remove('ok')},1800)};
+  try{await navigator.clipboard.writeText(v);done()}catch(e){const r=document.createRange();r.selectNodeContents(b.parentNode.querySelector('.v'));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}
+}));
+document.querySelectorAll('.filters button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  const f=b.dataset.f;
+  grid.querySelectorAll('.card').forEach(c=>{c.hidden=f!=='all'&&!c.dataset.tags.split(' ').includes(f)});
+}));
+</script>
+</body>
+</html>
