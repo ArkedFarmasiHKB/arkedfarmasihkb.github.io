@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="author" content="Zarif Zainol, RPh 25633">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chemo Dose Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +31,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font
 .wrap{max-width:1500px;margin:0 auto;padding:20px max(14px,env(safe-area-inset-right)) 90px max(14px,env(safe-area-inset-left))}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
 h1{font-size:1.5rem;margin:0;letter-spacing:-.01em}
+.credit{margin:2px 0 0;font-size:.85rem;color:var(--accent)}
 .sub{color:var(--muted);margin:2px 0 0;font-size:.88rem}
 kbd{font-family:var(--mono);font-size:.78em;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--panel)}
 
@@ -161,6 +163,7 @@ details.settings-panel summary{cursor:pointer;color:var(--accent);font-weight:60
   <header>
     <div>
       <h1>Chemo Dose Calculator</h1>
+      <p class="credit">Created by <b>Zarif Zainol, RPh 25633</b> · Pharmacist, Hospital Kepala Batas</p>
       <p class="sub"><span class="kbd-tip">Press <kbd>Enter</kbd> to jump to the next field · <kbd>M</kbd>/<kbd>F</kbd> sets sex · </span>up to 4 drugs per regimen</p>
     </div>
     <div class="actions">
@@ -287,6 +290,7 @@ details.settings-panel summary{cursor:pointer;color:var(--accent);font-weight:60
   </div>
 
   <p class="disclaimer">A calculation aid only. Check every result against your institution's protocol and have doses independently verified before prescribing or dispensing. BSA uses Mosteller; CrCl uses Cockcroft–Gault ((140 − age) × weight × 1.23 male / 1.04 female ÷ SCr µmol/L); mg/kg doses (e.g. trastuzumab) and CrCl use actual body weight; carboplatin uses Calvert (AUC × (GFR + 25)). Doses are not rounded.</p>
+  <p class="disclaimer" style="margin-top:8px">Created by <b>Zarif Zainol, RPh 25633</b>, Pharmacist, Hospital Kepala Batas. For collaboration, contact <b>zarif@moh.gov.my</b>.</p>
 </div>
 
 <a href="#calc" class="btn primary fab" id="fab">🧮 Calc</a>
