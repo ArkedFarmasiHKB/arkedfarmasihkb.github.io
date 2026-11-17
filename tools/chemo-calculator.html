@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chemo Dose Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f3f5f7; --panel:#ffffff; --ink:#15233a; --muted:#5d6a7e; --line:#d9dfe7;
+  --accent:#1f5fae; --accent-soft:#e6eef9; --warn:#a85d00; --warn-soft:#fdf1e1;
+  --ok:#1d7a4f; --ok-soft:#e3f4ea; --bad:#b3261e; --bad-soft:#fbe7e6;
+  --field:#f8fafc; --key:#eef2f7;
+  --c-bsa:#2158c4; --s-bsa:#e3ecfc; --c-crcl:#0b7f73; --s-crcl:#dcf2ee;
+  --dc1:#7333c0; --dc2:#b9500a; --dc3:#b0306a; --dc4:#2f7d1f;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0f1520; --panel:#172131; --ink:#e4eaf3; --muted:#93a0b4; --line:#2a3850;
+  --accent:#7fb0f0; --accent-soft:#1c2d47; --warn:#f0b061; --warn-soft:#3a2a14;
+  --ok:#6fd3a0; --ok-soft:#163327; --bad:#f28b82; --bad-soft:#3d1d1b; --field:#111a28; --key:#1f2c40;
+  --c-bsa:#8db8ff; --s-bsa:#152846; --c-crcl:#5fd6c6; --s-crcl:#0e302c;
+  --dc1:#c6a4ff; --dc2:#ffa766; --dc3:#ff8cc0; --dc4:#8fd67a; color-scheme:dark}}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45}
+[hidden]{display:none!important}
+.wrap{max-width:1500px;margin:0 auto;padding:20px max(14px,env(safe-area-inset-right)) 90px max(14px,env(safe-area-inset-left))}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{font-size:1.5rem;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.88rem}
+kbd{font-family:var(--mono);font-size:.78em;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--panel)}
+
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 300px;grid-template-areas:"pt res calc";gap:18px;align-items:start}
+.c-pt{grid-area:pt}.c-res{grid-area:res}.c-calc{grid-area:calc;position:sticky;top:14px}
+@media (max-width:1200px){.grid{grid-template-columns:330px minmax(0,1fr);grid-template-areas:"pt res" "calc res"}.c-calc{position:static}}
+@media (max-width:860px){.grid{grid-template-columns:1fr;grid-template-areas:"pt" "res" "calc"}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.full{grid-column:1/-1}
+label,.lbl{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--muted);font-weight:500;min-width:0}
+.step{font-family:var(--mono);font-size:.7rem;color:var(--accent);font-weight:600;margin-right:4px}
+.hint{font-size:.74rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+.unit-in{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:7px;background:var(--field);overflow:hidden;min-width:0}
+.unit-in:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+input,select{font:inherit;color:var(--ink);background:transparent;border:0;padding:9px 10px;width:100%;min-width:0;outline:none}
+input{font-family:var(--mono);font-variant-numeric:tabular-nums}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+select.solo,input.solo{border:1px solid var(--line);border-radius:7px;background:var(--field)}
+select.solo:focus,input.solo:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.unit{padding:0 10px;color:var(--muted);font-size:.8rem;border-left:1px solid var(--line);white-space:nowrap;display:flex;align-items:center;font-family:var(--mono);flex:none}
+.unit select{padding:8px 0;width:auto;font-family:var(--mono);font-size:.8rem;color:var(--muted);cursor:pointer}
+.seg{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--field)}
+.seg:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.seg button{flex:1;font:inherit;font-size:.9rem;border:0;background:transparent;color:var(--muted);padding:10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--panel);font-weight:600}
+.derived{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;font-size:.82rem}
+.derived div{display:flex;flex-direction:column}
+.derived span{color:var(--muted)}
+.derived b{font-family:var(--mono);font-weight:500}
+
+.btn{font:inherit;font-size:.88rem;font-weight:600;border:1px solid var(--accent);color:var(--accent);background:var(--panel);border-radius:7px;padding:8px 14px;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--panel)}
+.btn:focus-visible,.key:focus-visible,.rchip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:999px;align-self:flex-start}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.muted{background:var(--field);color:var(--muted);border:1px solid var(--line)}
+.formula{font-family:var(--mono);font-size:.78rem;color:var(--muted);overflow-wrap:anywhere}
+
+/* BSA / CrCl tiles */
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:560px){.tiles{grid-template-columns:1fr 1fr;gap:10px}}
+.tile{--c:var(--accent);--s:var(--accent-soft);background:var(--s);border:1px solid color-mix(in srgb,var(--c) 25%,transparent);border-top:4px solid var(--c);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.t-bsa{--c:var(--c-bsa);--s:var(--s-bsa)} .t-crcl{--c:var(--c-crcl);--s:var(--s-crcl)}
+.tile .k{font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--c)}
+.tile .v{font-family:var(--mono);font-size:clamp(1.7rem,4.2vw,2.8rem);font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--c);overflow-wrap:anywhere}
+.tile .v small,.drug .v small{font-size:.95rem;font-weight:500;color:var(--muted);margin-left:5px}
+.tile .note{font-size:.8rem;font-family:var(--mono);opacity:.85}
+.tile .formula{margin-top:4px;padding-top:6px;border-top:1px dashed color-mix(in srgb,var(--c) 30%,transparent)}
+@media (max-width:560px){.tile{padding:12px}.tile .formula{display:none}}
+
+/* drugs */
+.drug{--c:var(--dc1);background:color-mix(in srgb,var(--c) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--c) 28%,transparent);border-left:5px solid var(--c);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.drug[data-i="1"]{--c:var(--dc2)} .drug[data-i="2"]{--c:var(--dc3)} .drug[data-i="3"]{--c:var(--dc4)}
+.drug-h{display:flex;align-items:center;gap:10px}
+.badge{flex:none;width:26px;height:26px;border-radius:50%;background:var(--c);color:var(--panel);font-weight:700;font-size:.85rem;display:grid;place-items:center}
+.drug-h input{font-family:var(--sans);font-weight:600;font-size:1rem}
+.xbtn{flex:none;font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:7px;width:34px;height:34px;cursor:pointer}
+.xbtn:hover{color:var(--bad);border-color:var(--bad)}
+.dfields{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr);gap:10px}
+@media (max-width:560px){.dfields{grid-template-columns:1fr 1fr}.dfields .dose-f{grid-column:1/-1}}
+.dres{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto);gap:12px;align-items:end}
+.drug .k{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--c)}
+.drug .v{font-family:var(--mono);font-size:clamp(2rem,5vw,2.8rem);font-weight:600;line-height:1.05;color:var(--c);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.diffbox{display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right}
+.diffbox .dv{font-family:var(--mono);font-size:1.35rem;font-weight:600}
+.diffbox .dn{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.rchips{display:flex;flex-wrap:wrap;gap:6px}
+.rchip{font:inherit;font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:5px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25;min-width:64px}
+.rchip span{color:var(--muted);font-size:.7rem}
+.rchip i{font-style:normal;font-size:.68rem}
+.rchip.cur{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel))}
+.rlbl{font-size:.74rem;color:var(--muted)}
+.d-ok{color:var(--ok)} .d-warn{color:var(--warn)}
+#addDrug{align-self:flex-start}
+
+details.settings-panel summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.9rem}
+.check{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.85rem}
+.check input{width:auto;accent-color:var(--accent)}
+.summary{font-family:var(--mono);font-size:.82rem;white-space:pre-wrap;background:var(--field);border:1px solid var(--line);border-radius:8px;padding:12px;margin:0;overflow-x:auto}
+.disclaimer{color:var(--muted);font-size:.78rem;margin-top:20px;max-width:75ch}
+
+/* calculator */
+.calc-screen{border:1px solid var(--line);border-radius:8px;background:var(--field);padding:8px 10px}
+.calc-screen:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.calc-screen input{padding:2px 0;font-size:1.05rem;text-align:right}
+.calc-res{font-family:var(--mono);font-size:1.5rem;font-weight:600;text-align:right;min-height:1.9rem;overflow-wrap:anywhere}
+.calc-res.err{font-size:.85rem;color:var(--bad);font-weight:500;padding-top:6px}
+.inserts{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ins{font:inherit;font-family:var(--mono);font-size:.76rem;border:1px solid var(--line);background:var(--panel);color:var(--accent);border-radius:999px;padding:4px 10px;cursor:pointer}
+.ins:disabled{color:var(--muted);opacity:.45;cursor:default}
+.keys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.key{font:inherit;font-family:var(--mono);font-size:1rem;border:0;border-radius:7px;background:var(--key);color:var(--ink);padding:11px 0;cursor:pointer;touch-action:manipulation}
+.key:active{transform:translateY(1px)}
+.key.op{color:var(--accent);font-weight:600}
+.key.eq{background:var(--accent);color:var(--panel);font-weight:600}
+.key.clr{color:var(--bad)}
+.mem-h{display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+.mem-h button{font:inherit;font-size:.72rem;text-transform:none;letter-spacing:0;border:0;background:none;color:var(--accent);cursor:pointer;padding:0}
+.mem{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.mem li{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:8px;border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-family:var(--mono);font-size:.8rem;background:var(--field);cursor:pointer;min-height:36px}
+.mem li.empty{cursor:default;color:var(--muted);opacity:.6}
+.mem li .n{font-size:.68rem;color:var(--accent);font-weight:600}
+.mem li .e{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem li b{font-weight:600;color:var(--ink)}
+.mem li:not(.empty):hover{border-color:var(--accent)}
+
+/* phone */
+.fab{display:none}
+@media (max-width:860px){
+  body{font-size:16px}
+  input,select{font-size:16px}  /* stops iPhone zooming in on focus */
+  .unit select{font-size:14px}
+  .key{padding:15px 0;font-size:1.15rem}
+  .sub .kbd-tip{display:none}
+  .fab{display:flex;position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:5;border-radius:999px;padding:12px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);text-decoration:none;align-items:center;gap:6px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Chemo Dose Calculator</h1>
+      <p class="sub"><span class="kbd-tip">Press <kbd>Enter</kbd> to jump to the next field · <kbd>M</kbd>/<kbd>F</kbd> sets sex · </span>up to 4 drugs per regimen</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="resetBtn" type="button">New patient</button>
+      <button class="btn primary" id="copyBtn" type="button">Copy summary</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="col c-pt">
+      <section class="panel" aria-labelledby="pt-h">
+        <h2 id="pt-h">Patient</h2>
+        <div class="fields">
+          <div class="lbl full">
+            <span><span class="step">1</span>Sex</span>
+            <div class="seg" role="radiogroup" aria-label="Sex" tabindex="0" id="sexGroup" data-flow>
+              <button type="button" data-sex="M" aria-pressed="false" tabindex="-1">Male</button>
+              <button type="button" data-sex="F" aria-pressed="false" tabindex="-1">Female</button>
+            </div>
+          </div>
+          <label for="age"><span><span class="step">2</span>Age</span>
+            <span class="unit-in"><input id="age" data-flow type="number" inputmode="decimal" min="0"><span class="unit">yr</span></span></label>
+          <label for="wt"><span><span class="step">3</span>Weight</span>
+            <span class="unit-in"><input id="wt" data-flow type="number" inputmode="decimal" min="0" step="any"><span class="unit">kg</span></span></label>
+          <label for="ht"><span><span class="step">4</span>Height</span>
+            <span class="unit-in"><input id="ht" data-flow type="number" inputmode="decimal" min="0" step="any"><span class="unit">cm</span></span></label>
+          <label for="prevWt"><span><span class="step">5</span>Old weight <span class="hint">· optional</span></span>
+            <span class="unit-in"><input id="prevWt" data-flow type="number" inputmode="decimal" min="0" step="any"><span class="unit">kg</span></span></label>
+          <label for="scr" class="full"><span><span class="step">6</span>Serum creatinine</span>
+            <span class="unit-in"><input id="scr" data-flow type="number" inputmode="decimal" min="0" step="any">
+              <span class="unit"><select id="scrUnit" aria-label="Creatinine unit"><option value="umol">µmol/L</option><option value="mgdl">mg/dL</option></select></span></span></label>
+          <label for="bsaCap" class="full"><span>BSA cap <span class="hint">· mg/m² doses use max this BSA · clear to remove</span></span>
+            <span class="unit-in"><input id="bsaCap" type="number" inputmode="decimal" step="0.01" min="0" value="1.8" placeholder="no cap"><span class="unit">m²</span></span></label>
+        </div>
+        <div class="derived" aria-live="polite">
+          <div><span>Ideal body weight</span><b id="ibwOut">–</b></div>
+          <div><span>Adjusted body weight</span><b id="abwOut">–</b></div>
+          <div><span>BMI</span><b id="bmiOut">–</b></div>
+          <div><span>Weight change</span><b id="wtChgOut">–</b></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col c-res">
+      <div class="tiles">
+        <section class="tile t-bsa">
+          <span class="k">BSA · Mosteller</span>
+          <span class="v" id="bsaOut">–</span>
+          <span class="note" id="bsaNote"></span>
+          <div class="formula" id="bsaFx"></div>
+        </section>
+        <section class="tile t-crcl">
+          <span class="k">CrCl · Cockcroft–Gault</span>
+          <span class="v" id="crclOut">–</span>
+          <span class="note" id="crclNote"></span>
+          <span id="crclChip"></span>
+          <div class="formula" id="crclFx"></div>
+        </section>
+      </div>
+
+      <div id="drugs" class="col"></div>
+      <button class="btn" id="addDrug" type="button">+ Add drug</button>
+
+      <details class="panel settings-panel">
+        <summary>Settings: CrCl cap, carboplatin GFR, alert limit</summary>
+        <div class="fields" style="margin-top:14px">
+          <label for="crclCap">Cap CrCl at
+            <span class="unit-in"><input id="crclCap" type="number" inputmode="decimal" min="0" placeholder="no cap"><span class="unit">mL/min</span></span></label>
+          <label for="tol">Flag change over
+            <span class="unit-in"><input id="tol" type="number" inputmode="decimal" min="0" value="10"><span class="unit">%</span></span></label>
+          <label for="gfrSrc">Carboplatin GFR source
+            <select id="gfrSrc" class="solo"><option value="crcl">Calculated CrCl</option><option value="measured">Measured GFR</option></select></label>
+          <label for="gfrMeas">Measured GFR
+            <span class="unit-in"><input id="gfrMeas" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. EDTA"><span class="unit">mL/min</span></span></label>
+          <label for="gfrCap">Cap GFR at
+            <span class="unit-in"><input id="gfrCap" type="number" inputmode="decimal" min="0" value="125"><span class="unit">mL/min</span></span></label>
+          <label class="check full" for="scrRound"><input type="checkbox" id="scrRound"> Round SCr up to 0.8 mg/dL (≈71 µmol/L) if lower</label>
+        </div>
+      </details>
+
+      <section class="panel">
+        <h2>Summary <span id="copyMsg" class="chip muted" hidden></span></h2>
+        <pre class="summary" id="summary"></pre>
+      </section>
+    </div>
+
+    <div class="col c-calc" id="calc">
+      <section class="panel" aria-labelledby="calc-h">
+        <h2 id="calc-h">Calculator <span class="hint">type, then <kbd>Enter</kbd></span></h2>
+        <div class="calc-screen">
+          <input id="calcIn" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="e.g. 175*1.68" aria-label="Calculator expression">
+          <div class="calc-res" id="calcRes" aria-live="polite">0</div>
+        </div>
+        <div class="inserts" id="inserts" aria-label="Insert a value"></div>
+        <div class="keys">
+          <button type="button" class="key clr" data-k="C">C</button>
+          <button type="button" class="key" data-k="(">(</button>
+          <button type="button" class="key" data-k=")">)</button>
+          <button type="button" class="key" data-k="BS" aria-label="Backspace">⌫</button>
+          <button type="button" class="key op" data-k="/">÷</button>
+          <button type="button" class="key" data-k="7">7</button>
+          <button type="button" class="key" data-k="8">8</button>
+          <button type="button" class="key" data-k="9">9</button>
+          <button type="button" class="key" data-k="√(">√</button>
+          <button type="button" class="key op" data-k="*">×</button>
+          <button type="button" class="key" data-k="4">4</button>
+          <button type="button" class="key" data-k="5">5</button>
+          <button type="button" class="key" data-k="6">6</button>
+          <button type="button" class="key" data-k="^">xʸ</button>
+          <button type="button" class="key op" data-k="-">−</button>
+          <button type="button" class="key" data-k="1">1</button>
+          <button type="button" class="key" data-k="2">2</button>
+          <button type="button" class="key" data-k="3">3</button>
+          <button type="button" class="key" data-k="%">%</button>
+          <button type="button" class="key op" data-k="+">+</button>
+          <button type="button" class="key" data-k="0" style="grid-column:span 2">0</button>
+          <button type="button" class="key" data-k=".">.</button>
+          <button type="button" class="key eq" data-k="=" style="grid-column:span 2">=</button>
+        </div>
+        <div class="mem-h"><span>Memory · last 4 · tap to reuse</span><button type="button" id="memClear">clear</button></div>
+        <ol class="mem" id="mem"></ol>
+      </section>
+    </div>
+  </div>
+
+  <p class="disclaimer">A calculation aid only. Check every result against your institution's protocol and have doses independently verified before prescribing or dispensing. BSA uses Mosteller; CrCl uses Cockcroft–Gault ((140 − age) × weight × 1.23 male / 1.04 female ÷ SCr µmol/L); mg/kg doses (e.g. trastuzumab) and CrCl use actual body weight; carboplatin uses Calvert (AUC × (GFR + 25)). Doses are not rounded.</p>
+</div>
+
+<a href="#calc" class="btn primary fab" id="fab">🧮 Calc</a>
+
+<datalist id="drugList">
+  <option>Trastuzumab</option><option>Pertuzumab</option><option>Bevacizumab</option>
+  <option>Carboplatin</option><option>Cisplatin</option><option>Oxaliplatin</option>
+  <option>Paclitaxel</option><option>Docetaxel</option><option>Doxorubicin</option><option>Epirubicin</option>
+  <option>Cyclophosphamide</option><option>Fluorouracil</option><option>Gemcitabine</option><option>Irinotecan</option>
+  <option>Etoposide</option><option>Pemetrexed</option><option>Vinorelbine</option>
+</datalist>
+
+<template id="drugTpl">
+  <section class="drug">
+    <div class="drug-h">
+      <span class="badge">1</span>
+      <span class="unit-in" style="flex:1"><input class="d-name" list="drugList" placeholder="Drug name (optional)" data-flow autocomplete="off" aria-label="Drug name"></span>
+      <button type="button" class="xbtn" aria-label="Remove drug" title="Remove drug">✕</button>
+    </div>
+    <div class="dfields">
+      <label class="dose-f">Prescribed dose
+        <span class="unit-in"><input class="d-rate" data-flow type="number" inputmode="decimal" step="any" min="0">
+          <span class="unit"><select class="d-basis" aria-label="Dose basis">
+            <option value="m2">mg/m²</option><option value="kg">mg/kg</option><option value="flat">mg flat</option><option value="auc">AUC</option>
+          </select></span></span></label>
+      <label>Dose level
+        <span class="unit-in"><input class="d-pct" data-flow type="number" inputmode="decimal" step="any" min="0" value="100"><span class="unit">%</span></span></label>
+      <label>Old dose
+        <span class="unit-in"><input class="d-old" data-flow type="number" inputmode="decimal" step="any" min="0"><span class="unit">mg</span></span></label>
+    </div>
+    <div class="dres">
+      <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+        <span class="k">New dose</span>
+        <span class="v d-v">–</span>
+        <span class="formula d-fx"></span>
+      </div>
+      <div class="diffbox">
+        <span class="k">vs old dose</span>
+        <span class="dv d-diff">–</span>
+        <span class="dn d-dn"></span>
+        <span class="d-chip"></span>
+      </div>
+    </div>
+    <div>
+      <div class="rlbl">Dose level · tap to apply</div>
+      <div class="rchips"></div>
+    </div>
+  </section>
+</template>
+
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat($(id).value); return isFinite(v) ? v : NaN; };
+const ok = v => isFinite(v) && v > 0;
+const f = (v, d = 1) => isFinite(v) ? v.toLocaleString(undefined, {minimumFractionDigits: d, maximumFractionDigits: d}) : '–';
+const MAX_DRUGS = 4, LEVELS = [100, 90, 80, 75, 70, 60, 50];
+const BASIS_TXT = {m2: 'mg/m²', kg: 'mg/kg', flat: 'mg flat', auc: 'AUC'};
+const PRESET = { trastuzumab:'kg', pertuzumab:'flat', bevacizumab:'kg', carboplatin:'auc' };
+let sex = '';
+const V = {};
+
+/* ---------- Sex ---------- */
+function setSex(s){
+  sex = s;
+  document.querySelectorAll('[data-sex]').forEach(x => x.setAttribute('aria-pressed', x.dataset.sex === s));
+  calc();
+}
+document.querySelectorAll('[data-sex]').forEach(b => b.addEventListener('click', () => { setSex(b.dataset.sex); goNext($('sexGroup')); }));
+$('sexGroup').addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (k === 'm' || k === 'f') { setSex(k.toUpperCase()); e.preventDefault(); goNext($('sexGroup')); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setSex(sex === 'M' ? 'F' : 'M'); e.preventDefault(); }
+});
+
+/* ---------- Enter = next field ---------- */
+const flow = () => [...document.querySelectorAll('[data-flow]')];
+function goNext(el){
+  const list = flow(), i = list.indexOf(el);
+  const next = i >= 0 && i < list.length - 1 ? list[i + 1] : $('calcIn');
+  if (window.matchMedia('(max-width:860px)').matches && next === $('sexGroup')) return;
+  next.focus();
+  if (next.select) next.select();
+}
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.isComposing) return;
+  const t = e.target;
+  if (t.hasAttribute && t.hasAttribute('data-flow')) { e.preventDefault(); goNext(t); }
+});
+function markFlow(){ document.querySelectorAll('input[data-flow]').forEach(i => i.enterKeyHint = 'next'); }
+
+/* ---------- Drugs ---------- */
+function addDrug(focus){
+  const box = $('drugs');
+  if (box.children.length >= MAX_DRUGS) return;
+  const card = $('drugTpl').content.firstElementChild.cloneNode(true);
+  card.querySelector('.xbtn').addEventListener('click', () => {
+    if (box.children.length > 1) card.remove();
+    else card.querySelectorAll('input').forEach(i => i.value = i.classList.contains('d-pct') ? 100 : '');
+    calc();
+  });
+  const nameIn = card.querySelector('.d-name');
+  nameIn.addEventListener('input', () => {
+    const b = PRESET[nameIn.value.trim().toLowerCase()];
+    if (b) card.querySelector('.d-basis').value = b;
+  });
+  box.appendChild(card);
+  markFlow();
+  calc();
+  if (focus) nameIn.focus();
+}
+$('addDrug').addEventListener('click', () => addDrug(true));
+
+/* ---------- Main calculation ---------- */
+function chip(el, cls, text){ el.innerHTML = text ? `<span class="chip ${cls}">${text}</span>` : ''; }
+
+function calc(){
+  const age = num('age'), wt = num('wt'), ht = num('ht'), prevWt = num('prevWt');
+  const scr = num('scr'), scrUnit = $('scrUnit').value;
+  const S = [];
+
+  // Derived weights (Devine IBW)
+  const ibw = ok(ht) && sex ? Math.max((sex === 'M' ? 50 : 45.5) + 2.3 * (ht / 2.54 - 60), 0) : NaN;
+  const abw = ok(ibw) && ok(wt) ? (wt > ibw ? ibw + 0.4 * (wt - ibw) : wt) : NaN;
+  const bmi = ok(wt) && ok(ht) ? wt / Math.pow(ht / 100, 2) : NaN;
+  $('ibwOut').textContent = ok(ibw) ? f(ibw) + ' kg' : (ok(ht) && !sex ? 'set sex' : '–');
+  $('abwOut').textContent = ok(abw) ? f(abw) + ' kg' : '–';
+  $('bmiOut').textContent = ok(bmi) ? f(bmi) + ' kg/m²' : '–';
+  let wtLine = '';
+  if (ok(wt) && ok(prevWt)) {
+    const p = (wt - prevWt) / prevWt * 100;
+    $('wtChgOut').textContent = (p > 0 ? '+' : '') + f(p) + '%';
+    $('wtChgOut').style.color = Math.abs(p) >= 10 ? 'var(--warn)' : '';
+    wtLine = `Weight change vs old: ${prevWt} → ${wt} kg (${p>0?'+':''}${f(p)}%)${Math.abs(p)>=10?' ≥10%':''}`;
+  } else { $('wtChgOut').textContent = '–'; $('wtChgOut').style.color = ''; }
+
+  // BSA (Mosteller)
+  let bsa = NaN, bsaRaw = NaN;
+  if (ok(wt) && ok(ht)) bsaRaw = bsa = Math.sqrt(ht * wt / 3600);
+  const cap = num('bsaCap');
+  if (ok(bsa) && ok(cap) && bsa > cap) bsa = cap;
+  $('bsaOut').innerHTML = ok(bsa) ? `${f(bsa,2)}<small>m²</small>` : '–';
+  $('bsaNote').textContent = ok(bsaRaw) ? (bsa !== bsaRaw ? `capped · actual ${f(bsaRaw,2)} m²` : (ok(cap) ? `below ${f(cap,2)} cap` : 'no cap')) : '';
+  $('bsaFx').textContent = ok(bsaRaw) ? `√(${ht} × ${wt} / 3600) = ${f(bsaRaw,3)} m²` : 'Needs weight and height.';
+
+  // CrCl
+  const scrUm = scrUnit === 'umol' ? scr : scr * 88.4;
+  let scrUsed = scrUm, rounded = false;
+  if ($('scrRound').checked && ok(scrUm) && scrUm < 70.72) { scrUsed = 70.72; rounded = true; }
+  const N = sex === 'M' ? 1.23 : 1.04;
+  let crcl = NaN, crclRaw = NaN;
+  if (ok(age) && ok(wt) && ok(scrUsed) && sex) {
+    crcl = crclRaw = (140 - age) * wt * N / scrUsed;
+    const cc = num('crclCap');
+    if (ok(cc) && crcl > cc) crcl = cc;
+  }
+  $('crclOut').innerHTML = ok(crcl) ? `${f(crcl,2)}<small>mL/min</small>` : '–';
+  $('crclNote').textContent = ok(crcl) ? `actual wt ${f(wt)} kg${crcl !== crclRaw ? ` · capped from ${f(crclRaw,1)}` : ''}` : '';
+  if (ok(crcl)) {
+    if (crcl >= 90) chip($('crclChip'), 'ok', 'Stage 1 · ≥ 90');
+    else if (crcl >= 60) chip($('crclChip'), 'ok', 'Stage 2 · 60–89');
+    else if (crcl >= 45) chip($('crclChip'), 'warn', 'Stage 3A · 45–59');
+    else if (crcl >= 30) chip($('crclChip'), 'warn', 'Stage 3B · 30–44');
+    else if (crcl >= 15) chip($('crclChip'), 'bad', 'Stage 4 · 15–29');
+    else chip($('crclChip'), 'bad', 'Stage 5 · < 15');
+  } else chip($('crclChip'), '', '');
+  $('crclFx').textContent = ok(crclRaw)
+    ? `(140 − ${age}) × ${wt} × ${N} / ${f(scrUsed, scrUnit==='umol'&&!rounded?0:1)} µmol/L = ${f(crclRaw,2)} mL/min${scrUnit==='mgdl'?` · SCr ${scr} mg/dL × 88.4`:''}${rounded?' · SCr rounded up':''}`
+    : 'Needs sex, age, weight and serum creatinine.';
+
+  // GFR for carboplatin
+  const src = $('gfrSrc').value;
+  let gfr = src === 'measured' ? num('gfrMeas') : crclRaw;
+  const gfrRaw = gfr, gc = num('gfrCap');
+  if (ok(gfr) && ok(gc) && gfr > gc) gfr = gc;
+
+  const tol = ok(num('tol')) ? num('tol') : 10;
+
+  // Drugs
+  const doses = [];
+  [...$('drugs').children].forEach((card, i) => {
+    const q = s => card.querySelector(s);
+    card.dataset.i = i;
+    q('.badge').textContent = i + 1;
+    const name = q('.d-name').value.trim() || `Drug ${i + 1}`;
+    const rate = parseFloat(q('.d-rate').value), basis = q('.d-basis').value;
+    const pIn = parseFloat(q('.d-pct').value), old = parseFloat(q('.d-old').value);
+    const p = ok(pIn) ? pIn : 100;
+    q('.d-rate').step = basis === 'auc' ? '0.5' : 'any';
+    q('.d-rate').placeholder = basis === 'auc' ? 'target AUC' : '';
+
+    let full = NaN, fx = '', need = '';
+    if (!ok(rate)) need = 'Enter the prescribed dose.';
+    else if (basis === 'm2') { if (ok(bsa)) { full = rate * bsa; fx = `${rate} mg/m² × ${f(bsa,2)} m²`; } else need = 'Needs weight and height for BSA.'; }
+    else if (basis === 'kg') { if (ok(wt)) { full = rate * wt; fx = `${rate} mg/kg × ${f(wt)} kg (actual)`; } else need = 'Needs weight.'; }
+    else if (basis === 'flat') { full = rate; fx = `${rate} mg flat`; }
+    else if (basis === 'auc') {
+      if (ok(gfr)) { full = rate * (gfr + 25); fx = `AUC ${rate} × (GFR ${f(gfr,1)}${gfr!==gfrRaw?' capped':''} + 25)`; }
+      else need = src === 'measured' ? 'Enter measured GFR in Settings.' : 'Needs CrCl (sex, age, weight, SCr).';
+    }
+    const dose = ok(full) ? full * p / 100 : NaN;
+    doses[i] = dose;
+
+    q('.d-v').innerHTML = ok(dose) ? `${f(dose,1)}<small>mg</small>` : '–';
+    q('.d-fx').textContent = ok(dose) ? `${fx}${p !== 100 ? ` × ${p}%` : ''} = ${f(dose,1)} mg` : need;
+
+    let diffTxt = '';
+    if (ok(old) && ok(dose)) {
+      const d = dose - old, pc = d / old * 100, over = Math.abs(pc) > tol;
+      q('.d-diff').textContent = `${pc>0?'+':''}${f(pc,1)}%`;
+      q('.d-diff').className = 'dv d-diff ' + (over ? 'd-warn' : 'd-ok');
+      q('.d-dn').textContent = `${f(old,1)} → ${f(dose,1)} mg`;
+      chip(q('.d-chip'), over ? 'warn' : 'ok', over ? `> ${tol}% change` : `within ${tol}%`);
+      diffTxt = ` | old ${f(old,1)} mg: ${pc>0?'+':''}${f(pc,1)}% (${over?`exceeds ${tol}%`:`within ${tol}%`})`;
+    } else {
+      q('.d-diff').textContent = '–'; q('.d-diff').className = 'dv d-diff';
+      q('.d-dn').textContent = ok(old) ? '' : 'enter old dose';
+      chip(q('.d-chip'), '', '');
+    }
+
+    const rc = q('.rchips'); rc.innerHTML = '';
+    LEVELS.forEach(lv => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'rchip' + (lv === p ? ' cur' : '');
+      const dv = full * lv / 100;
+      let vs = '';
+      if (ok(dv) && ok(old)) { const pc = (dv - old) / old * 100; vs = `<i class="${Math.abs(pc) > tol ? 'd-warn' : 'd-ok'}">${pc>0?'+':''}${f(pc,0)}%</i>`; }
+      b.innerHTML = `<span>${lv}%</span>${ok(dv) ? f(dv,1) : '–'}${vs}`;
+      b.addEventListener('click', () => { q('.d-pct').value = lv; calc(); });
+      rc.appendChild(b);
+    });
+
+    if (ok(rate) || ok(old)) {
+      const basisLine = basis === 'auc' ? `AUC ${rate} (GFR ${f(gfr,1)} mL/min, ${src==='measured'?'measured':'C-G'})` : `${rate} ${BASIS_TXT[basis]}`;
+      S.push(`${i+1}. ${name}: ${ok(rate)?basisLine:'–'}${p!==100?` at ${p}%`:''} = ${ok(dose)?f(dose,1)+' mg':'–'}${diffTxt}`);
+    }
+  });
+  $('addDrug').hidden = $('drugs').children.length >= MAX_DRUGS;
+
+  // calculator inserts
+  Object.assign(V, { BSA: ok(bsa) ? +bsa.toFixed(2) : NaN, CrCl: ok(crcl) ? +crcl.toFixed(2) : NaN, Wt: wt });
+  doses.forEach((d, i) => V['D' + (i + 1)] = ok(d) ? +d.toFixed(1) : NaN);
+  for (let i = doses.length; i < MAX_DRUGS; i++) delete V['D' + (i + 1)];
+  renderInserts();
+
+  // Summary
+  const pt = `Patient: ${sex==='M'?'Male':sex==='F'?'Female':'–'}, ${isFinite(age)?age:'–'} yr, ${isFinite(wt)?wt:'–'} kg, ${isFinite(ht)?ht:'–'} cm, SCr ${isFinite(scr)?scr:'–'} ${scrUnit==='umol'?'µmol/L':'mg/dL'}`;
+  const date = new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+  $('summary').textContent = [
+    `Dose calculation · ${date}`, pt, wtLine,
+    ok(bsa) ? `BSA (Mosteller): ${f(bsa,2)} m²${bsa!==bsaRaw?` (capped from ${f(bsaRaw,2)})`:''}` : '',
+    ok(crcl) ? `CrCl (C-G, actual wt): ${f(crcl,2)} mL/min${crcl!==crclRaw?` (capped from ${f(crclRaw,2)})`:''}` : '',
+    ...S
+  ].filter(Boolean).join('\n');
+}
+
+document.addEventListener('input', e => { if (e.target.id !== 'calcIn') calc(); });
+document.addEventListener('change', e => { if (e.target.id !== 'calcIn') calc(); });
+
+$('resetBtn').addEventListener('click', () => {
+  ['age','scr','wt','ht','prevWt','gfrMeas'].forEach(id => $(id).value = '');
+  const box = $('drugs'); box.innerHTML = ''; addDrug(false);
+  setSex(''); $('sexGroup').focus(); window.scrollTo({top:0});
+});
+
+$('copyBtn').addEventListener('click', () => {
+  const text = $('summary').textContent, msg = $('copyMsg');
+  const done = t => { msg.textContent = t; msg.hidden = false; setTimeout(() => msg.hidden = true, 2000); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents($('summary')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done('Selected, press Ctrl/⌘+C'); };
+  try { navigator.clipboard.writeText(text).then(() => done('Copied'), fallback); } catch (e) { fallback(); }
+});
+
+/* ---------- Calculator ---------- */
+const cIn = $('calcIn'), cRes = $('calcRes');
+const MEM_KEY = 'chemoCalcMemory', MEM_N = 4;
+let mem = [];
+try { mem = JSON.parse(localStorage.getItem(MEM_KEY)) || []; } catch (e) { mem = []; }
+let ans = mem.length ? mem[0].r : 0;
+function saveMem(){ try { localStorage.setItem(MEM_KEY, JSON.stringify(mem)); } catch (e) {} }
+
+function renderInserts(){
+  const box = $('inserts'); box.innerHTML = '';
+  [...Object.keys(V), 'Ans'].forEach(k => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ins'; b.textContent = k;
+    if (k !== 'Ans') { b.disabled = !ok(V[k]); if (ok(V[k])) b.title = String(V[k]); }
+    b.addEventListener('click', () => insert(k === 'Ans' ? fmtC(ans) : String(V[k])));
+    box.appendChild(b);
+  });
+}
+function renderMem(){
+  const ol = $('mem'); ol.innerHTML = '';
+  for (let i = 0; i < MEM_N; i++) {
+    const m = mem[i], li = document.createElement('li');
+    li.innerHTML = `<span class="n">M${i+1}</span><span class="e"></span><b></b>`;
+    if (m) {
+      li.children[1].textContent = m.e + ' =';
+      li.children[2].textContent = m.r;
+      li.title = 'Tap to insert ' + m.r;
+      li.addEventListener('click', () => insert(m.r));
+    } else { li.className = 'empty'; li.children[1].textContent = 'empty'; }
+    ol.appendChild(li);
+  }
+}
+function evaluate(expr){
+  let s = expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/,/g,'').replace(/\bans\b/gi, '(' + ans + ')');
+  if (!/^[0-9+\-*/().\s%^√]*$/.test(s)) throw new Error('Use numbers and + − × ÷ ( ) % ^ √ only');
+  if (!s.trim()) throw new Error('empty');
+  s = s.replace(/(\d+(?:\.\d+)?)%/g, '($1/100)').replace(/\^/g, '**').replace(/√/g, 'Math.sqrt');
+  const r = Function('"use strict";return (' + s + ')')();
+  if (typeof r !== 'number' || !isFinite(r)) throw new Error('Not a valid result');
+  return r;
+}
+const fmtC = r => +(+r).toPrecision(12) + '';
+function preview(){
+  cRes.classList.remove('err');
+  try { cRes.textContent = fmtC(evaluate(cIn.value)); } catch (e) { cRes.textContent = cIn.value.trim() ? '…' : '0'; }
+}
+function commit(){
+  if (!cIn.value.trim()) return;
+  try {
+    const r = evaluate(cIn.value), rs = fmtC(r);
+    if (cIn.value.trim() !== rs) {          // don't store "270 = 270"
+      mem.unshift({ e: cIn.value.trim(), r: rs });
+      mem = mem.slice(0, MEM_N); saveMem(); renderMem();
+    }
+    ans = r; cRes.classList.remove('err'); cRes.textContent = rs;
+    cIn.value = rs; cIn.select();
+  } catch (e) {
+    cRes.classList.add('err'); cRes.textContent = e.message === 'empty' ? '' : e.message;
+  }
+}
+function insert(t){
+  const a = cIn.selectionStart ?? cIn.value.length, b = cIn.selectionEnd ?? cIn.value.length;
+  cIn.value = cIn.value.slice(0, a) + t + cIn.value.slice(b);
+  const p = a + String(t).length; cIn.focus({preventScroll:true}); cIn.setSelectionRange(p, p); preview();
+}
+cIn.addEventListener('input', preview);
+cIn.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); commit(); }
+  else if (e.key === 'Escape') { cIn.value = ''; preview(); }
+});
+// On phones, keypad taps shouldn't pop up the on-screen keyboard
+const isTouch = () => window.matchMedia('(pointer:coarse)').matches;
+document.querySelectorAll('[data-k]').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.k;
+  if (k === 'C') { cIn.value = ''; preview(); }
+  else if (k === 'BS') {
+    const a = cIn.selectionStart ?? cIn.value.length, z = cIn.selectionEnd ?? cIn.value.length;
+    if (a !== z) { cIn.value = cIn.value.slice(0,a) + cIn.value.slice(z); cIn.setSelectionRange(a,a); }
+    else if (a > 0) { cIn.value = cIn.value.slice(0,a-1) + cIn.value.slice(a); cIn.setSelectionRange(a-1,a-1); }
+    preview();
+  }
+  else if (k === '=') commit();
+  else insert(k);
+  if (isTouch()) cIn.blur(); else cIn.focus();
+}));
+$('memClear').addEventListener('click', () => { mem = []; saveMem(); renderMem(); });
+
+/* phone: hide the Calc button while the calculator is on screen */
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(es => es.forEach(e => $('fab').style.visibility = e.isIntersecting ? 'hidden' : 'visible')).observe($('calc'));
+}
+
+addDrug(false);
+renderMem();
+calc();
+if (!isTouch()) $('sexGroup').focus();
+</script>
+</body>
+</html>
