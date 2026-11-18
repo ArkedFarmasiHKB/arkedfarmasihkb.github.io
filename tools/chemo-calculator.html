@@ -106,6 +106,14 @@ select.solo:focus,input.solo:focus{border-color:var(--accent);box-shadow:0 0 0 3
 .diffbox{display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right}
 .diffbox .dv{font-family:var(--mono);font-size:1.35rem;font-weight:600}
 .diffbox .dn{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.dprep{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:10px;border-top:1px dashed color-mix(in srgb,var(--c) 30%,transparent)}
+@media (max-width:560px){.dprep{grid-template-columns:1fr 1fr}.dprep label:first-child{grid-column:1/-1}}
+.prep{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+@media (max-width:700px){.prep{grid-template-columns:1fr 1fr}}
+.prep div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.prep .pk{font-size:.72rem;color:var(--muted)}
+.prep b{font-family:var(--mono);font-size:1.15rem;font-weight:600;font-variant-numeric:tabular-nums}
+.prep .chip{font-size:.7rem;padding:2px 7px}
 .rchips{display:flex;flex-wrap:wrap;gap:6px}
 .rchip{font:inherit;font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:5px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.25;min-width:64px}
 .rchip span{color:var(--muted);font-size:.7rem}
@@ -234,6 +242,8 @@ details.settings-panel summary{cursor:pointer;color:var(--accent);font-weight:60
             <span class="unit-in"><input id="crclCap" type="number" inputmode="decimal" min="0" placeholder="no cap"><span class="unit">mL/min</span></span></label>
           <label for="tol">Flag change over
             <span class="unit-in"><input id="tol" type="number" inputmode="decimal" min="0" value="10"><span class="unit">%</span></span></label>
+          <label for="realTol">Real dose limit (± vs calculated)
+            <span class="unit-in"><input id="realTol" type="number" inputmode="decimal" min="0" step="any" value="5"><span class="unit">%</span></span></label>
           <label for="gfrSrc">Carboplatin GFR source
             <select id="gfrSrc" class="solo"><option value="crcl">Calculated CrCl</option><option value="measured">Measured GFR</option></select></label>
           <label for="gfrMeas">Measured GFR
@@ -334,6 +344,20 @@ details.settings-panel summary{cursor:pointer;color:var(--accent);font-weight:60
         <span class="d-chip"></span>
       </div>
     </div>
+    <div class="dprep">
+      <label>Concentration
+        <span class="unit-in"><input class="d-conc" data-flow type="number" inputmode="decimal" step="any" min="0" placeholder="vial"><span class="unit">mg/mL</span></span></label>
+      <label>Real dose
+        <span class="unit-in"><input class="d-real" data-flow type="number" inputmode="decimal" step="any" min="0"><span class="unit">mg</span></span></label>
+      <label>or volume
+        <span class="unit-in"><input class="d-vol" data-flow type="number" inputmode="decimal" step="0.1" min="0"><span class="unit">mL</span></span></label>
+    </div>
+    <div class="prep" hidden>
+      <div><span class="pk">Volume for calc. dose</span><b class="p-cv">–</b></div>
+      <div><span class="pk">Withdraw (real dose)</span><b class="p-wv">–</b></div>
+      <div><span class="pk">Real vs calculated</span><b class="p-rc">–</b><span class="p-rcc"></span></div>
+      <div><span class="pk">Real vs old dose</span><b class="p-ro">–</b><span class="p-roc"></span></div>
+    </div>
     <div>
       <div class="rlbl">Dose level · tap to apply</div>
       <div class="rchips"></div>
@@ -391,6 +415,9 @@ function addDrug(focus){
     else card.querySelectorAll('input').forEach(i => i.value = i.classList.contains('d-pct') ? 100 : '');
     calc();
   });
+  // real dose (mg) and volume (mL) fill each other in; remember which one was typed last
+  card.querySelector('.d-real').addEventListener('input', () => card.dataset.src = 'mg');
+  card.querySelector('.d-vol').addEventListener('input', () => card.dataset.src = 'ml');
   const nameIn = card.querySelector('.d-name');
   nameIn.addEventListener('input', () => {
     const b = PRESET[nameIn.value.trim().toLowerCase()];
@@ -469,7 +496,8 @@ function calc(){
   const tol = ok(num('tol')) ? num('tol') : 10;
 
   // Drugs
-  const doses = [];
+  const realTol = isFinite(num('realTol')) && num('realTol') >= 0 ? num('realTol') : 5;
+  const doses = [], vols = [];
   [...$('drugs').children].forEach((card, i) => {
     const q = s => card.querySelector(s);
     card.dataset.i = i;
@@ -510,6 +538,36 @@ function calc(){
       chip(q('.d-chip'), '', '');
     }
 
+    // Preparation: concentration, real dose, volume
+    const conc = parseFloat(q('.d-conc').value);
+    let real = parseFloat(q('.d-real').value), vol = parseFloat(q('.d-vol').value);
+    if (ok(conc)) {
+      if (card.dataset.src === 'ml' && ok(vol)) { real = vol * conc; q('.d-real').value = +real.toFixed(1); }
+      else if (ok(real)) { vol = real / conc; q('.d-vol').value = +vol.toFixed(1); }
+    }
+    const calcVol = ok(conc) && ok(dose) ? dose / conc : NaN;
+    const wVol = ok(conc) && ok(real) ? real / conc : NaN;
+    const pcmp = (a, b, lim) => {
+      if (!ok(a) || !ok(b)) return ['–', '', ''];
+      const pc = (a - b) / b * 100, over = Math.abs(pc) > lim;
+      return [`${pc>0?'+':''}${f(pc,1)}%`, over ? 'warn' : 'ok', over ? `outside ±${lim}%` : `within ±${lim}%`];
+    };
+    const rc1 = pcmp(real, dose, realTol), ro1 = pcmp(real, old, tol);
+    const showPrep = ok(conc) || ok(real);
+    q('.prep').hidden = !showPrep;
+    if (showPrep) {
+      q('.p-cv').textContent = ok(calcVol) ? `${f(calcVol,1)} mL` : (ok(conc) ? '–' : 'enter conc.');
+      q('.p-wv').textContent = ok(wVol) ? `${f(wVol,1)} mL` : (ok(real) ? 'enter conc.' : 'enter real dose');
+      q('.p-rc').textContent = rc1[0]; q('.p-rc').className = 'p-rc' + (rc1[1] ? (rc1[1] === 'warn' ? ' d-warn' : ' d-ok') : '');
+      chip(q('.p-rcc'), rc1[1], rc1[2]);
+      q('.p-ro').textContent = ro1[0]; q('.p-ro').className = 'p-ro' + (ro1[1] ? (ro1[1] === 'warn' ? ' d-warn' : ' d-ok') : '');
+      chip(q('.p-roc'), ro1[1], ro1[2]);
+    }
+    vols[i] = ok(wVol) ? wVol : calcVol;
+    let prepTxt = '';
+    if (ok(real)) prepTxt = ` | real ${f(real,1)} mg${ok(wVol)?` = ${f(wVol,1)} mL @ ${conc} mg/mL`:''} (${rc1[0]} vs calc${ok(old)?`, ${ro1[0]} vs old`:''})`;
+    else if (ok(calcVol)) prepTxt = ` | ${f(calcVol,1)} mL @ ${conc} mg/mL`;
+
     const rc = q('.rchips'); rc.innerHTML = '';
     LEVELS.forEach(lv => {
       const b = document.createElement('button');
@@ -524,7 +582,7 @@ function calc(){
 
     if (ok(rate) || ok(old)) {
       const basisLine = basis === 'auc' ? `AUC ${rate} (GFR ${f(gfr,1)} mL/min, ${src==='measured'?'measured':'C-G'})` : `${rate} ${BASIS_TXT[basis]}`;
-      S.push(`${i+1}. ${name}: ${ok(rate)?basisLine:'–'}${p!==100?` at ${p}%`:''} = ${ok(dose)?f(dose,1)+' mg':'–'}${diffTxt}`);
+      S.push(`${i+1}. ${name}: ${ok(rate)?basisLine:'–'}${p!==100?` at ${p}%`:''} = ${ok(dose)?f(dose,1)+' mg':'–'}${diffTxt}${prepTxt}`);
     }
   });
   $('addDrug').hidden = $('drugs').children.length >= MAX_DRUGS;
@@ -532,7 +590,8 @@ function calc(){
   // calculator inserts
   Object.assign(V, { BSA: ok(bsa) ? +bsa.toFixed(2) : NaN, CrCl: ok(crcl) ? +crcl.toFixed(2) : NaN, Wt: wt });
   doses.forEach((d, i) => V['D' + (i + 1)] = ok(d) ? +d.toFixed(1) : NaN);
-  for (let i = doses.length; i < MAX_DRUGS; i++) delete V['D' + (i + 1)];
+  vols.forEach((v, i) => V['V' + (i + 1)] = ok(v) ? +v.toFixed(1) : NaN);
+  for (let i = doses.length; i < MAX_DRUGS; i++) { delete V['D' + (i + 1)]; delete V['V' + (i + 1)]; }
   renderInserts();
 
   // Summary
