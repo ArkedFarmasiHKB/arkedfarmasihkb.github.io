@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Umar</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f4ede2,#1e2321);--card:light-dark(#fffaf2,#2b322f);--ink:light-dark(#2f3a35,#eef1ea);--soft:light-dark(#7c8a82,#a9b5ae);--line:light-dark(#e4d9c8,#3a423e)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:17px/1.4 "Baloo 2",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px 16px}
+h1{font-size:clamp(32px,6vw,52px);margin:8px 0 20px;line-height:1.05}
+.g{display:grid;gap:18px;width:min(100%,720px);grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+a{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 16px;border-radius:30px;background:var(--card);box-shadow:0 6px 0 var(--line);color:var(--ink);text-decoration:none;font-size:30px;font-weight:800}
+a i{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font-style:normal}
+a:nth-child(1) i{background:#cfe0d2}a:nth-child(2) i{background:#f1d3c2}
+a svg{width:70px;height:70px}
+a span{font-size:16px;font-weight:600;color:var(--soft)}
+a:focus-visible{outline:3px solid #f6c445;outline-offset:3px}
+footer{margin-top:auto;padding-top:24px;font-size:13px;color:var(--soft)}
+</style>
+</head>
+<body>
+<h1>Game Umar</h1>
+<div class="g">
+ <a href="mana-daddy/"><i><svg viewBox="0 0 64 64"><circle cx="28" cy="28" r="16" fill="none" stroke="#2f3a35" stroke-width="5"/><path d="M40 40l14 14" stroke="#2f3a35" stroke-width="6" stroke-linecap="round"/></svg></i>Mana Daddy?<span>Cari gambar yang betul</span></a>
+ <a href="umar-nak/"><i><svg viewBox="0 0 64 64"><path d="M10 14h44v28H30l-12 10V42h-8z" fill="#fffaf2" stroke="#2f3a35" stroke-width="4" stroke-linejoin="round"/><circle cx="22" cy="28" r="3" fill="#2f3a35"/><circle cx="32" cy="28" r="3" fill="#2f3a35"/><circle cx="42" cy="28" r="3" fill="#2f3a35"/></svg></i>Umar nak…<span>Papan minta</span></a>
+</div>
+<footer>Created by Zarif Zainol, RPh 25633</footer>
+</body>
+</html>

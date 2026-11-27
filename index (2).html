@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Umar Nak...</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: tender, calm, sensory-friendly — a child's talking board, not a flashy game
+   IDEA: a soft felt picture board on a nursery wall; each card a padded button
+   PICTURE: the board itself fills the screen, big cards with simple drawn objects
+   COLOUR and TYPE: warm oat ground, soft sage + clay cards, one sun-yellow accent; Baloo 2 rounded
+   LAYOUT: modest title, board, sentence strip; parent panel hidden behind a hold-to-open lock */
+:root{color-scheme:light dark;
+--bg:light-dark(#f4ede2,#1e2321);--card:light-dark(#fffaf2,#2b322f);--ink:light-dark(#2f3a35,#eef1ea);
+--soft:light-dark(#7c8a82,#a9b5ae);--sage:light-dark(#cfe0d2,#3d5246);--clay:light-dark(#f1d3c2,#5a4136);
+--sun:#f6c445;--line:light-dark(#e4d9c8,#3a423e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 "Baloo 2",system-ui,sans-serif;overflow-x:clip;user-select:none;-webkit-user-select:none;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:14px max(4vw,14px) 6px}
+h1{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.05;font-weight:800;flex:1}
+.lock{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--soft);display:grid;place-items:center;position:relative;cursor:pointer}
+.lock svg{width:24px;height:24px}
+.lock .ring{position:absolute;inset:-4px;border-radius:50%;border:4px solid var(--sun);clip-path:inset(0 100% 0 0);transition:none}
+.lock.hold .ring{clip-path:inset(0 0 0 0);transition:clip-path 1.6s linear}
+.hint{font-size:13px;color:var(--soft);padding:0 max(4vw,14px)}
+.strip{margin:8px max(4vw,14px);min-height:74px;border-radius:22px;background:var(--card);border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:clamp(26px,4.5vw,42px);font-weight:700;text-align:center;padding:6px 16px}
+.strip.on{border-style:solid;border-color:var(--sun)}
+.board{flex:1;display:grid;gap:clamp(10px,2vw,20px);padding:8px max(4vw,14px) 14px;grid-template-columns:repeat(3,minmax(0,1fr));align-content:stretch}
+.board.n4{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (orientation:landscape) and (min-width:700px){.board.n4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (orientation:portrait),(max-width:560px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.c{border:0;border-radius:28px;background:var(--card);box-shadow:0 6px 0 var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;color:var(--ink);font:inherit;cursor:pointer;min-height:150px;transition:transform .15s}
+.c:nth-child(odd) .pic{background:var(--sage)}.c:nth-child(even) .pic{background:var(--clay)}
+.pic{width:min(72%,190px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:cover}
+.pic svg{width:70%;height:70%}
+.c b{font-size:clamp(22px,3.4vw,32px);font-weight:800;line-height:1}
+.c:active,.c.pop{transform:scale(.96)}
+.c.pop{box-shadow:0 0 0 6px var(--sun),0 6px 0 var(--line)}
+@media (prefers-reduced-motion:reduce){.c{transition:none}.c:active,.c.pop{transform:none}}
+footer{text-align:center;font-size:13px;color:var(--soft);padding:4px 10px 12px}
+/* parent panel */
+.panel{position:fixed;inset:0;background:var(--bg);overflow-y:auto;display:none;z-index:5}
+.panel.open{display:block}
+.pin{max-width:860px;margin:0 auto;padding:18px max(4vw,14px) 40px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ph h2{flex:1;margin:0;font-size:30px;line-height:1.1}
+h3{font-size:20px;margin:22px 0 8px}
+.btn{min-height:44px;padding:8px 16px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 16px "Baloo 2",system-ui,sans-serif;cursor:pointer}
+.btn.pri{background:var(--sun);border-color:var(--sun);color:#2f2a1a}
+.btn.rec{background:#e0685a;border-color:#e0685a;color:#fff}
+.btn:focus-visible,.c:focus-visible,.lock:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.row{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;background:var(--card);border-radius:18px;padding:12px;margin-bottom:10px;border:2px solid var(--line)}
+.row.off{opacity:.55}
+.thumb{width:76px;height:76px;border-radius:50%;overflow:hidden;background:var(--sage);display:grid;place-items:center}
+.thumb img{width:100%;height:100%;object-fit:cover}.thumb svg{width:70%;height:70%}
+.f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(max-width:560px){.f{grid-template-columns:minmax(0,1fr)}}
+label{font-size:13px;color:var(--soft);display:block}
+input[type=text]{width:100%;font:16px "Baloo 2",system-ui,sans-serif;min-height:44px;padding:6px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.tag{font-size:13px;padding:2px 10px;border-radius:99px;background:var(--sage)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg .btn[aria-pressed=true]{background:var(--sun);border-color:var(--sun);color:#2f2a1a}
+.log{display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:7em minmax(0,1fr) 3em;gap:8px;align-items:center;font-size:15px}
+.bar i{display:block;height:16px;border-radius:8px;background:var(--sun)}
+.bar span:last-child{text-align:right}
+.note{font-size:14px;color:var(--soft)}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Umar nak…</h1>
+  <button class="lock" id="lock" aria-label="Tekan lama untuk mod ibu bapa">
+    <span class="ring"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+  </button>
+</header>
+<div class="strip" id="strip" aria-live="polite">Tekan gambar</div>
+<main class="board" id="board"></main>
+<footer>Created by Zarif Zainol, RPh 25633</footer>
+
+<section class="panel" id="panel" aria-label="Mod ibu bapa">
+ <div class="pin">
+  <div class="ph"><h2>Mod Daddy</h2><button class="btn pri" id="done">Siap</button></div>
+  <p class="note">Rakam suara awak dan tukar gambar untuk setiap kad. Semuanya disimpan dalam tablet ni sahaja.</p>
+
+  <h3>Bilangan kad</h3>
+  <div class="seg" id="count"></div>
+
+  <h3>Bunyi</h3>
+  <div class="seg" id="vol"></div>
+
+  <h3>Kad</h3>
+  <div id="rows"></div>
+
+  <h3>Hari ini Umar minta</h3>
+  <div class="log" id="log"></div>
+  <p class="note" id="logNote"></p>
+  <div class="acts"><button class="btn" id="copyLog">Salin rekod 7 hari</button><span class="note" id="copied"></span></div>
+
+  <h3>Tetapan semula</h3>
+  <div class="acts"><button class="btn" id="reset">Padam semua &amp; mula semula</button><span class="note" id="resetAsk"></span></div>
+ </div>
+</section>
+
+<input type="file" id="imgIn" accept="image/*" class="hide">
+<input type="file" id="audIn" accept="audio/*" capture class="hide">
+
+<script>
+{
+const ICON={
+air:'<svg viewBox="0 0 64 64"><path d="M18 14h28l-4 40a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M21 30h22l-2.4 24a2 2 0 0 1-2 2H25.4a2 2 0 0 1-2-2z" fill="#7cc6e8"/></svg>',
+makan:'<svg viewBox="0 0 64 64"><ellipse cx="32" cy="42" rx="26" ry="10" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M14 40a18 14 0 0 1 36 0z" fill="#fbf6ea" stroke="#2f3a35" stroke-width="3"/><circle cx="26" cy="32" r="2" fill="#2f3a35"/><circle cx="36" cy="30" r="2" fill="#2f3a35"/></svg>',
+susu:'<svg viewBox="0 0 64 64"><rect x="26" y="6" width="12" height="8" rx="3" fill="#f6c445" stroke="#2f3a35" stroke-width="3"/><path d="M22 18h20v36a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M22 14h20v4H22z" fill="#2f3a35"/><path d="M26 30h12M26 38h12M26 46h12" stroke="#c9d6dd" stroke-width="3"/></svg>',
+main:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="#f6c445" stroke="#2f3a35" stroke-width="3"/><path d="M8 32h48M32 8c-10 8-10 40 0 48M32 8c10 8 10 40 0 48" fill="none" stroke="#2f3a35" stroke-width="3"/></svg>',
+dukung:'<svg viewBox="0 0 64 64"><circle cx="24" cy="18" r="8" fill="#e8b48f" stroke="#2f3a35" stroke-width="3"/><circle cx="42" cy="26" r="6" fill="#e8b48f" stroke="#2f3a35" stroke-width="3"/><path d="M10 58c0-14 6-26 14-26s14 12 14 26" fill="#7fae8f" stroke="#2f3a35" stroke-width="3"/><path d="M34 42c0-6 3-10 8-10s8 4 8 10" fill="#7cc6e8" stroke="#2f3a35" stroke-width="3"/><path d="M18 40c6 6 20 6 26 0" fill="none" stroke="#2f3a35" stroke-width="3" stroke-linecap="round"/></svg>',
+tidur:'<svg viewBox="0 0 64 64"><path d="M8 40h48v12H8z" fill="#fff" stroke="#2f3a35" stroke-width="3"/><rect x="12" y="32" width="14" height="8" rx="4" fill="#cfe0d2" stroke="#2f3a35" stroke-width="3"/><path d="M8 52v6M56 52v6" stroke="#2f3a35" stroke-width="3"/><path d="M38 12h10l-10 12h10" fill="none" stroke="#2f3a35" stroke-width="3" stroke-linejoin="round"/></svg>',
+tandas:'<svg viewBox="0 0 64 64"><rect x="16" y="8" width="18" height="20" rx="3" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M12 30h40a20 14 0 0 1-40 0z" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M24 44l-2 14h20l-2-14" fill="#fff" stroke="#2f3a35" stroke-width="3"/></svg>',
+tolong:'<svg viewBox="0 0 64 64"><path d="M18 34V18a4 4 0 0 1 8 0v12V12a4 4 0 0 1 8 0v18V14a4 4 0 0 1 8 0v18-8a4 4 0 0 1 8 0v14c0 12-8 20-18 20s-14-6-18-12l-6-10a4 4 0 0 1 7-4z" fill="#e8b48f" stroke="#2f3a35" stroke-width="3" stroke-linejoin="round"/></svg>'
+};
+const DEF=[
+ {id:'air',label:'Air',say:'Umar nak air'},
+ {id:'makan',label:'Makan',say:'Umar nak makan'},
+ {id:'susu',label:'Susu',say:'Umar nak susu'},
+ {id:'main',label:'Main',say:'Umar nak main'},
+ {id:'dukung',label:'Dukung',say:'Umar nak dukung'},
+ {id:'tidur',label:'Tidur',say:'Umar nak tidur'},
+ {id:'tandas',label:'Tandas',say:'Umar nak pergi tandas'},
+ {id:'tolong',label:'Tolong',say:'Tolong Umar'}
+];
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---- storage: IndexedDB with safe fallback to memory ---- */
+let dbp=null;
+function db(){ if(dbp) return dbp; dbp=new Promise(res=>{try{const r=indexedDB.open('umar-nak',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}catch(e){res(null)}}); return dbp }
+const mem={};
+async function get(k){const d=await db();if(!d)return mem[k];return new Promise(res=>{try{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(mem[k])}catch(e){res(mem[k])}})}
+async function put(k,v){mem[k]=v;const d=await db();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch(e){}}
+async function del(k){delete mem[k];const d=await db();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').delete(k)}catch(e){}}
+
+let S={cards:DEF.map(c=>({...c,on:true})),n:6,vol:1};
+let media={}; /* id -> {img:dataURL, aud:Blob} */
+let urls={};
+let log={};   /* 'YYYY-MM-DD' -> {id:count} */
+
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const shown=()=>S.cards.filter(c=>c.on).slice(0,S.n);
+const pic=c=>media[c.id]&&media[c.id].img?'<img alt="" src="'+esc(media[c.id].img)+'">':(ICON[c.id]||ICON.main);
+
+function renderBoard(){
+  const list=shown();
+  const b=$('#board');b.className='board'+(S.n===4?' n4':'');
+  b.innerHTML=list.map(c=>'<button class="c" data-id="'+esc(c.id)+'"><span class="pic">'+pic(c)+'</span><b>'+esc(c.label)+'</b></button>').join('');
+}
+
+/* ---- speaking ---- */
+let cur=null;
+function speakTTS(t){try{const s=window.speechSynthesis;if(!s)return;s.cancel();const u=new SpeechSynthesisUtterance(t);const v=s.getVoices();u.voice=v.find(x=>/^ms/i.test(x.lang))||v.find(x=>/^id/i.test(x.lang))||null;u.lang=u.voice?u.voice.lang:'ms-MY';u.rate=.85;u.volume=S.vol;s.speak(u)}catch(e){}}
+function play(c){
+  try{if(cur){cur.pause();cur=null}window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
+  if(S.vol===0)return;
+  const m=media[c.id];
+  if(m&&m.aud){if(!urls[c.id])urls[c.id]=URL.createObjectURL(m.aud);cur=new Audio(urls[c.id]);cur.volume=S.vol;cur.play().catch(()=>speakTTS(c.say))}
+  else speakTTS(c.say);
+}
+let busy=0;
+$('#board').addEventListener('click',e=>{
+  const el=e.target.closest('.c');if(!el)return;
+  const now=Date.now();if(now-busy<700)return;busy=now; /* calm: ignore rapid repeat taps */
+  const c=S.cards.find(x=>x.id===el.dataset.id);if(!c)return;
+  document.querySelectorAll('.c.pop').forEach(x=>x.classList.remove('pop'));
+  el.classList.add('pop');setTimeout(()=>el.classList.remove('pop'),900);
+  const st=$('#strip');st.textContent=c.say;st.classList.add('on');
+  play(c);
+  const d=today();log[d]=log[d]||{};log[d][c.id]=(log[d][c.id]||0)+1;put('log',log);
+});
+
+/* ---- hold-to-open parent mode ---- */
+let ht=null;const lock=$('#lock');
+const startHold=e=>{e.preventDefault();lock.classList.add('hold');ht=setTimeout(()=>{lock.classList.remove('hold');openPanel()},1600)};
+const stopHold=()=>{clearTimeout(ht);lock.classList.remove('hold')};
+lock.addEventListener('pointerdown',startHold);
+['pointerup','pointerleave','pointercancel'].forEach(t=>lock.addEventListener(t,stopHold));
+lock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openPanel()});
+lock.addEventListener('contextmenu',e=>e.preventDefault());
+
+function openPanel(){renderPanel();$('#panel').classList.add('open')}
+$('#done').addEventListener('click',()=>{stopRec();$('#panel').classList.remove('open');renderBoard()});
+
+function seg(el,opts,val,fn){el.innerHTML=opts.map(o=>'<button class="btn" aria-pressed="'+(o[0]===val)+'" data-v="'+o[0]+'">'+o[1]+'</button>').join('');el.onclick=e=>{const b=e.target.closest('button');if(!b)return;fn(+b.dataset.v);renderPanel()}}
+
+function renderPanel(){
+  seg($('#count'),[[4,'4 kad'],[6,'6 kad'],[8,'8 kad']],S.n,v=>{S.n=v;save()});
+  seg($('#vol'),[[0,'Senyap'],[.5,'Perlahan'],[1,'Biasa']],S.vol,v=>{S.vol=v;save()});
+  const vis=shown().map(c=>c.id);
+  $('#rows').innerHTML=S.cards.map((c,i)=>{
+    const m=media[c.id]||{};
+    return '<div class="row'+(vis.includes(c.id)?'':' off')+'" data-i="'+i+'">'+
+     '<div class="thumb">'+pic(c)+'</div><div>'+
+     '<div class="f"><div><label for="l'+i+'">Nama kad</label><input type="text" id="l'+i+'" data-k="label" value="'+esc(c.label)+'"></div>'+
+     '<div><label for="s'+i+'">Ayat yang disebut</label><input type="text" id="s'+i+'" data-k="say" value="'+esc(c.say)+'"></div></div>'+
+     '<div class="acts">'+
+      '<button class="btn '+(recId===c.id?'rec':'')+'" data-a="rec">'+(recId===c.id?'■ Berhenti rakam':'● Rakam suara')+'</button>'+
+      '<button class="btn" data-a="test">▶ Dengar</button>'+
+      '<button class="btn" data-a="img">Tukar gambar</button>'+
+      (m.img?'<button class="btn" data-a="noimg">Gambar asal</button>':'')+
+      (m.aud?'<button class="btn" data-a="noaud">Padam suara</button>':'')+
+      '<button class="btn" data-a="on">'+(c.on?'Sorok':'Tunjuk')+'</button>'+
+      (i>0?'<button class="btn" data-a="up" aria-label="Naikkan">↑</button>':'')+
+      '<span class="tag">'+(m.aud?'Suara Daddy':'Suara tablet')+'</span>'+
+     '</div></div></div>'}).join('');
+  renderLog();
+}
+function renderLog(){
+  const d=log[today()]||{};const tot=Object.values(d).reduce((a,b)=>a+b,0);
+  const max=Math.max(1,...Object.values(d));
+  $('#log').innerHTML=S.cards.filter(c=>d[c.id]).sort((a,b)=>d[b.id]-d[a.id]).map(c=>'<div class="bar"><span>'+esc(c.label)+'</span><span><i style="width:'+(d[c.id]/max*100)+'%"></i></span><span>'+d[c.id]+'</span></div>').join('');
+  $('#logNote').textContent=tot?'Jumlah '+tot+' kali hari ini.':'Belum ada tekanan hari ini.';
+}
+$('#copyLog').addEventListener('click',async()=>{
+  const days=Object.keys(log).sort().slice(-7);
+  const txt='Rekod "Umar nak…" (7 hari)\n'+days.map(d=>d+': '+S.cards.filter(c=>log[d][c.id]).map(c=>c.label+' '+log[d][c.id]).join(', ')).join('\n');
+  try{await navigator.clipboard.writeText(txt);$('#copied').textContent='Disalin. Boleh tampal dalam WhatsApp atau tunjuk pada terapis.'}catch(e){$('#copied').textContent='Tak dapat salin di sini.'}
+});
+let armed=false;
+$('#reset').addEventListener('click',async()=>{
+  if(!armed){armed=true;$('#resetAsk').textContent='Tekan sekali lagi untuk sahkan.';setTimeout(()=>{armed=false;$('#resetAsk').textContent=''},4000);return}
+  armed=false;for(const c of S.cards)await del('m_'+c.id);
+  S={cards:DEF.map(c=>({...c,on:true})),n:6,vol:1};media={};urls={};log={};
+  await put('log',log);save();$('#resetAsk').textContent='Sudah dipadam.';renderPanel();
+});
+
+function save(){put('state',S)}
+$('#rows').addEventListener('input',e=>{const r=e.target.closest('.row');if(!r)return;S.cards[+r.dataset.i][e.target.dataset.k]=e.target.value;save()});
+
+let target=null;
+$('#rows').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const i=+b.closest('.row').dataset.i;const c=S.cards[i];const a=b.dataset.a;
+  if(a==='test')play(c);
+  if(a==='img'){target=c.id;$('#imgIn').value='';$('#imgIn').click()}
+  if(a==='noimg'){delete media[c.id].img;await saveMedia(c.id);renderPanel()}
+  if(a==='noaud'){delete media[c.id].aud;delete urls[c.id];await saveMedia(c.id);renderPanel()}
+  if(a==='on'){c.on=!c.on;save();renderPanel()}
+  if(a==='up'){[S.cards[i-1],S.cards[i]]=[S.cards[i],S.cards[i-1]];save();renderPanel()}
+  if(a==='rec'){if(recId===c.id)stopRec();else startRec(c.id)}
+});
+async function saveMedia(id){await put('m_'+id,media[id]||{})}
+
+/* photo: shrink to 420px square */
+$('#imgIn').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f||!target)return;const id=target;
+  const im=new Image();im.onload=async()=>{
+    const s=420,cv=document.createElement('canvas');cv.width=cv.height=s;
+    const k=Math.min(im.width,im.height);cv.getContext('2d').drawImage(im,(im.width-k)/2,(im.height-k)/2,k,k,0,0,s,s);
+    media[id]=media[id]||{};media[id].img=cv.toDataURL('image/jpeg',.85);URL.revokeObjectURL(im.src);
+    await saveMedia(id);renderPanel();renderBoard();
+  };im.src=URL.createObjectURL(f);
+});
+
+/* voice: record with mic when allowed, otherwise open tablet recorder / file */
+let recId=null,rec=null,chunks=[];
+async function startRec(id){
+  stopRec();
+  try{
+    const st=await navigator.mediaDevices.getUserMedia({audio:true});
+    rec=new MediaRecorder(st);chunks=[];recId=id;
+    rec.ondataavailable=ev=>chunks.push(ev.data);
+    rec.onstop=async()=>{st.getTracks().forEach(t=>t.stop());const bl=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+      media[id]=media[id]||{};media[id].aud=bl;delete urls[id];await saveMedia(id);recId=null;rec=null;renderPanel()};
+    rec.start();renderPanel();
+    setTimeout(()=>{if(recId===id)stopRec()},6000);
+  }catch(err){recId=null;target=id;$('#audIn').value='';$('#audIn').click()}
+}
+function stopRec(){try{if(rec&&rec.state!=='inactive')rec.stop()}catch(e){}}
+$('#audIn').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f||!target)return;
+  media[target]=media[target]||{};media[target].aud=f;delete urls[target];await saveMedia(target);renderPanel();
+});
+
+/* load saved data */
+(async()=>{
+  try{
+    const s=await get('state');if(s&&s.cards){
+      DEF.forEach(d=>{if(!s.cards.find(c=>c.id===d.id))s.cards.push({...d,on:true})});S=s}
+    log=(await get('log'))||{};
+    for(const c of S.cards){const m=await get('m_'+c.id);if(m)media[c.id]=m}
+  }catch(e){}
+  renderBoard();
+})();
+renderBoard();
+try{speechSynthesis&&speechSynthesis.getVoices()}catch(e){}
+}
+</script>
+</body>
+</html>

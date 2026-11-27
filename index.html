@@ -1,301 +1,317 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Arked Farmasi Zarif Zainol</title>
-<meta name="description" content="Koleksi game pendidikan farmasi pixel-art oleh Zarif Zainol (RPh 25633), Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang.">
-<meta name="author" content="ZARIF ZAINOL, RPh 25633, Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang">
-<meta property="og:title" content="Arked Farmasi Zarif Zainol">
-<meta property="og:description" content="4 game pendidikan ubat percuma. Main online atau muat turun untuk panel pintar.">
-<meta property="og:image" content="img/kaunter-demam.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Mana Daddy?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bungee&family=Pixelify+Sans:wght@500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-/* Layout: retro arcade "cabinet" page — profile marquee on top, game cartridges in a responsive grid, how-to strip, credit footer. One committed look (royal blue + cream), no theme switching. */
-:root{
-  --royal:#1769b0; --royal-deep:#0f3f74; --navy:#0c2a50;
-  --sky:#4aa3df; --orange:#f2752e; --yellow:#e8b830; --green:#3fae6a; --red:#e2474f; --teal:#168f83;
-  --cream:#fff0cf; --cream-hi:#fffaf0; --cream-lo:#f1dcae; --ink:#2a1f22; --muted:#6b5d55;
-  --font-ui:"Pixelify Sans","Courier New",monospace;
-  --font-logo:"Bungee","Arial Black",sans-serif;
-  --font-read:"Atkinson Hyperlegible","Verdana",sans-serif;
-  color-scheme:light;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;color:var(--ink);font-family:var(--font-read);font-size:16px;line-height:1.5;
-  background:var(--royal-deep);
-  background-image:repeating-conic-gradient(#14508e 0 25%,#0f4580 0 50%);background-size:24px 24px}
-img{max-width:100%;display:block}
-a{color:inherit}
-:focus-visible{outline:4px solid #ffe15a;outline-offset:3px}
-.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.px{image-rendering:pixelated}
-
-/* pixel panel + arcade buttons */
-.panel{background:linear-gradient(var(--cream-hi),var(--cream) 55%,var(--cream-lo));border:4px solid var(--ink);
-  box-shadow:inset 4px 4px 0 rgba(255,255,255,.8),inset -4px -4px 0 rgba(160,100,30,.18),6px 6px 0 rgba(0,0,0,.35)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-family:var(--font-ui);font-weight:700;font-size:18px;
-  padding:9px 16px;border:4px solid var(--ink);color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);cursor:pointer;
-  box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),inset -3px -3px 0 rgba(0,0,0,.2),4px 4px 0 rgba(0,0,0,.35);transition:transform .08s steps(2)}
-.btn:hover{transform:translateY(-2px)}
-.btn:active{transform:translate(3px,3px);box-shadow:inset 3px 3px 0 rgba(255,255,255,.45),1px 1px 0 rgba(0,0,0,.35)}
-.btn.play{background:linear-gradient(#8ae6a4,var(--green) 55%,#2a8a50)}
-.btn.dl{background:linear-gradient(#8dcdf4,var(--sky) 50%,var(--royal))}
-.btn.ghost{background:linear-gradient(#fff,#f3e7cf);color:var(--ink);text-shadow:none}
-
-/* ---------- marquee / profile ---------- */
-.top{padding-block:28px 8px}
-.brandbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.brand{font-family:var(--font-logo);font-size:22px;color:#fff;letter-spacing:1px;text-shadow:3px 3px 0 var(--ink)}
-.brand span:nth-child(4n+1){color:var(--sky)}.brand span:nth-child(4n+2){color:var(--orange)}.brand span:nth-child(4n+3){color:var(--yellow)}.brand span:nth-child(4n){color:#7ddc98}
-.nav{display:flex;gap:10px;flex-wrap:wrap}
-.nav a{font-family:var(--font-ui);font-weight:700;color:#fff;text-decoration:none;font-size:16px;padding:4px 10px;border:3px solid rgba(255,255,255,.5)}
-.nav a:hover{background:rgba(255,255,255,.15)}
-
-.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center;padding:26px 28px;position:relative}
-.ribbon{position:absolute;left:24px;top:-18px;background:linear-gradient(#ffad74,var(--orange) 55%,#cf5615);color:#fff;border:4px solid var(--ink);
-  font-family:var(--font-ui);font-weight:700;font-size:15px;letter-spacing:2px;padding:2px 14px;text-shadow:2px 2px 0 rgba(0,0,0,.25)}
-.photo{width:210px;aspect-ratio:1;position:relative;border:6px solid var(--ink);background:linear-gradient(#bfe8ff,#86c8f0);
-  box-shadow:0 0 0 6px var(--cream-hi),0 0 0 10px var(--ink),8px 10px 0 10px rgba(0,0,0,.28)}
-.photo img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover}
-.photo .star{z-index:2}
-.photo .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-logo);font-size:72px;color:#fff;text-shadow:5px 5px 0 var(--royal)}
-.photo .star{position:absolute;right:-22px;bottom:-18px;width:56px;height:56px}
-.eyebrow{font-family:var(--font-ui);font-weight:700;font-size:15px;letter-spacing:3px;text-transform:uppercase;color:#a5651c;margin:0}
-.name{font-family:var(--font-logo);font-weight:400;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1;margin:6px 0 10px;color:var(--royal);
-  text-shadow:4px 4px 0 #bcdcf6;letter-spacing:1px;text-wrap:balance}
-.badges{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
-.rph{font-family:var(--font-logo);font-size:16px;color:#a3430b;background:linear-gradient(#ffe6c2,#ffc58a);border:3px solid #a3430b;padding:2px 10px}
-.role{font-family:var(--font-ui);font-weight:700;font-size:22px}
-.place{font-size:17px;color:var(--muted);margin:0 0 12px}
-.lead{max-width:60ch;margin:0 0 16px;font-size:17px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{font-family:var(--font-ui);font-weight:700;font-size:15px;background:#fff;border:3px solid var(--ink);padding:3px 10px;box-shadow:3px 3px 0 rgba(0,0,0,.2)}
-.chip b{font-family:var(--font-logo);font-weight:400;color:var(--royal)}
-
-/* ---------- games ---------- */
-section{padding-block:40px 0}
-.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-.sechead h2{margin:0;font-family:var(--font-logo);font-weight:400;font-size:clamp(1.6rem,3.6vw,2.2rem);color:#fff;text-shadow:4px 4px 0 var(--ink);letter-spacing:1px}
-.sechead p{margin:4px 0 0;color:#d6e8fa;max-width:60ch}
-.filters{display:flex;gap:8px;flex-wrap:wrap}
-.filters button{font-family:var(--font-ui);font-weight:700;font-size:15px;padding:5px 12px;border:3px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.3)}
-.filters button[aria-pressed="true"]{background:linear-gradient(#ffe27a,var(--yellow));}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
-.card{display:flex;flex-direction:column;min-width:0}
-.card[hidden]{display:none}
-.shot{position:relative;border-bottom:4px solid var(--ink);aspect-ratio:16/9;overflow:hidden;background:var(--navy)}
-.shot img{width:100%;height:100%;object-fit:cover;transition:transform .25s steps(3)}
-.card:hover .shot img{transform:scale(1.04)}
-.num{position:absolute;left:10px;top:10px;font-family:var(--font-logo);font-size:15px;color:#fff;background:var(--ink);padding:2px 8px}
-.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
-.card h3{margin:0;font-family:var(--font-logo);font-weight:400;font-size:22px;line-height:1.1;color:var(--ink)}
-.meta{font-family:var(--font-ui);font-weight:700;font-size:14px;color:var(--teal-d,#0f6a61)}
-.desc{margin:0;font-size:15px;line-height:1.45}
-.tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-family:var(--font-ui);font-weight:700;font-size:13px;border:2px solid var(--ink);padding:0 7px;background:#fff}
-.tag.awam{background:#d9f2e3}.tag.staf{background:#dbeafb}.tag.kanak{background:#ffe7c7}
-.src{font-size:12.5px;color:var(--muted);margin:0}
-.acts{display:flex;gap:10px;margin-top:auto;padding-top:6px;flex-wrap:wrap}
-.acts .btn{flex:1;min-width:130px;white-space:nowrap;font-size:16px;padding:9px 10px}
-.cr{font-size:12px;color:var(--muted);border-top:2px dashed rgba(42,31,34,.2);padding-top:8px;margin:2px 0 0}
-
-/* ---------- how-to ---------- */
-.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:22px}
-.step{display:flex;gap:12px;align-items:flex-start}
-.step .n{flex:none;width:40px;height:40px;display:grid;place-items:center;font-family:var(--font-logo);font-size:18px;color:#fff;background:var(--orange);border:3px solid var(--ink)}
-.step h3{margin:0 0 2px;font-family:var(--font-ui);font-weight:700;font-size:19px}
-.step p{margin:0;font-size:15px;color:var(--muted)}
-.note{margin:14px 22px 0;font-size:14px;color:var(--muted)}
-
-/* ---------- hero CTA ---------- */
-.hello{font-family:var(--font-ui);font-weight:700;font-size:24px;color:var(--orange);margin:0 0 6px}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-.cta .btn{font-size:17px}
-/* ---------- contact ---------- */
-.contact{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;padding:24px;align-items:center}
-.contact h3{margin:0 0 8px;font-family:var(--font-logo);font-weight:400;font-size:24px;color:var(--royal)}
-.contact p{margin:0 0 6px;max-width:52ch}
-.ways{display:grid;gap:14px}
-.way{display:flex;align-items:center;gap:14px;background:#fff;border:4px solid var(--ink);padding:12px 14px;box-shadow:4px 4px 0 rgba(0,0,0,.25);min-width:0}
-.way .ic{flex:none;width:48px;height:48px;display:grid;place-items:center;border:3px solid var(--ink)}
-.way .ic svg{width:30px;height:30px}
-.way.mail .ic{background:linear-gradient(#ffad74,var(--orange))}
-.way.wa .ic{background:linear-gradient(#8ae6a4,var(--green))}
-.way .txt{flex:1;min-width:0}
-.way small{display:block;font-family:var(--font-ui);font-weight:700;font-size:13px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.way a.v{font-family:var(--font-ui);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
-.way a.v:hover{color:var(--royal);text-decoration:underline}
-.copy-btn{flex:none;font-family:var(--font-ui);font-weight:700;font-size:14px;padding:6px 10px;border:3px solid var(--ink);background:linear-gradient(#fff,#f3e7cf);cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,.25)}
-.copy-btn.ok{background:linear-gradient(#c9f2d6,#8ae6a4)}
-@media (max-width:720px){.contact{grid-template-columns:minmax(0,1fr)}.cta{justify-content:center}}
-/* ---------- footer ---------- */
-footer{padding-block:40px 32px}
-.foot{padding:20px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-.foot .who{font-family:var(--font-ui);font-weight:700;font-size:17px}
-.foot .who b{color:var(--royal)}
-.foot p{margin:4px 0 0;font-size:14px;color:var(--muted);max-width:70ch}
-.copy{font-family:var(--font-logo);font-size:14px;color:var(--ink)}
-
-@media (max-width:720px){
-  .hero{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center;padding:30px 18px 22px}
-  .badges,.chips{justify-content:center}
-  .photo{width:170px}
-  .how{grid-template-columns:minmax(0,1fr)}
-  .grid{grid-template-columns:minmax(0,1fr)}
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* VOICE: tender, calm, sensory-friendly — a gentle find-the-picture game for a 3-year-old
+   IDEA: a family photo album on the floor; Daddy asks "mana…?" and Umar points
+   PICTURE: the question bubble and 2–4 big round photo cards fill the screen
+   COLOUR and TYPE: warm oat ground, sage + clay cards, sun-yellow for the right answer; Baloo 2
+   LAYOUT: question on top, photo cards below, parent mode behind a hold-to-open lock */
+:root{color-scheme:light dark;
+--bg:light-dark(#f4ede2,#1e2321);--card:light-dark(#fffaf2,#2b322f);--ink:light-dark(#2f3a35,#eef1ea);
+--soft:light-dark(#7c8a82,#a9b5ae);--sage:light-dark(#cfe0d2,#3d5246);--clay:light-dark(#f1d3c2,#5a4136);
+--sun:#f6c445;--line:light-dark(#e4d9c8,#3a423e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 "Baloo 2",system-ui,sans-serif;overflow-x:clip;user-select:none;-webkit-user-select:none;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:14px max(4vw,14px) 4px}
+h1{margin:0;font-size:clamp(24px,3.6vw,34px);line-height:1.05;font-weight:800;flex:1}
+.dots{display:flex;gap:6px}.dots i{width:14px;height:14px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--sun)}
+.lock{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--soft);display:grid;place-items:center;position:relative;cursor:pointer;flex:none}
+.lock svg{width:24px;height:24px}
+.lock .ring{position:absolute;inset:-4px;border-radius:50%;border:4px solid var(--sun);clip-path:inset(0 100% 0 0)}
+.lock.hold .ring{clip-path:inset(0 0 0 0);transition:clip-path 1.6s linear}
+.q{margin:8px max(4vw,14px);border-radius:26px;background:var(--card);border:2px solid var(--line);display:flex;align-items:center;gap:14px;padding:10px 18px;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.q b{font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.05;flex:1}
+.q .spk{width:54px;height:54px;border-radius:50%;background:var(--sun);display:grid;place-items:center;flex:none}
+.q .spk svg{width:28px;height:28px}
+.board{flex:1;display:grid;gap:clamp(12px,2.4vw,24px);padding:10px max(4vw,14px) 14px;grid-template-columns:repeat(var(--n),minmax(0,1fr));align-content:center}
+@media (orientation:portrait),(max-width:560px){.board.n3,.board.n4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.c{border:0;border-radius:30px;background:var(--card);box-shadow:0 6px 0 var(--line);display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;color:var(--ink);font:inherit;cursor:pointer;transition:transform .2s,opacity .3s}
+.c:nth-child(odd) .pic{background:var(--sage)}.c:nth-child(even) .pic{background:var(--clay)}
+.pic{width:min(88%,260px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:cover}.pic svg{width:72%;height:72%}
+.c b{font-size:clamp(20px,3vw,28px);font-weight:700;line-height:1}
+.c.hide-names b{visibility:hidden}
+.c.yes{box-shadow:0 0 0 8px var(--sun),0 6px 0 var(--line);transform:scale(1.05)}
+.c.dim{opacity:.35}
+.c.nudge .pic{animation:glow 1s ease-in-out 2}
+@keyframes glow{50%{box-shadow:0 0 0 10px var(--sun)}}
+@media (prefers-reduced-motion:reduce){.c{transition:none}.c.yes{transform:none}.c.nudge .pic{animation:none;box-shadow:0 0 0 8px var(--sun)}}
+.win{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;text-align:center}
+.win.on{display:flex}
+.win svg{width:min(50vw,260px);height:auto}
+.win h2{margin:0;font-size:clamp(36px,7vw,64px);line-height:1}
+.big{min-height:64px;padding:10px 30px;border-radius:22px;border:0;background:var(--sun);color:#2f2a1a;font:800 24px "Baloo 2",system-ui,sans-serif;cursor:pointer}
+footer{text-align:center;font-size:13px;color:var(--soft);padding:4px 10px 12px}
+.gone{display:none!important}
+/* parent panel */
+.panel{position:fixed;inset:0;background:var(--bg);overflow-y:auto;display:none;z-index:5}
+.panel.open{display:block}
+.pin{max-width:880px;margin:0 auto;padding:18px max(4vw,14px) 40px}
+.ph{display:flex;align-items:center;gap:10px}
+.ph h2{flex:1;margin:0;font-size:30px;line-height:1.1}
+h3{font-size:20px;margin:22px 0 8px}
+.btn{min-height:44px;padding:8px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 16px "Baloo 2",system-ui,sans-serif;cursor:pointer}
+.btn.pri{background:var(--sun);border-color:var(--sun);color:#2f2a1a}
+.btn.rec{background:#e0685a;border-color:#e0685a;color:#fff}
+.btn:focus-visible,.c:focus-visible,.lock:focus-visible,.q:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg .btn[aria-pressed=true]{background:var(--sun);border-color:var(--sun);color:#2f2a1a}
+.row{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;background:var(--card);border-radius:18px;padding:12px;margin-bottom:10px;border:2px solid var(--line)}
+.row.off{opacity:.55}
+.thumb{width:84px;height:84px;border-radius:50%;overflow:hidden;background:var(--sage);display:grid;place-items:center}
+.thumb img{width:100%;height:100%;object-fit:cover}.thumb svg{width:72%;height:72%}
+.f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(max-width:560px){.f{grid-template-columns:minmax(0,1fr)}.row{grid-template-columns:64px minmax(0,1fr)}.thumb{width:64px;height:64px}}
+label{font-size:13px;color:var(--soft);display:block}
+input[type=text]{width:100%;font:16px "Baloo 2",system-ui,sans-serif;min-height:44px;padding:6px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.tag{font-size:13px;padding:2px 10px;border-radius:99px;background:var(--sage)}
+.note{font-size:14px;color:var(--soft);margin:4px 0}
+.praise{display:grid;gap:8px}
 </style>
 </head>
 <body>
-<header class="wrap top">
-  <div class="brandbar">
-    <div class="brand" aria-label="Arked Farmasi"><span>A</span><span>R</span><span>K</span><span>E</span><span>D</span> <span>F</span><span>A</span><span>R</span><span>M</span><span>A</span><span>S</span><span>I</span></div>
-    <nav class="nav" aria-label="Navigasi"><a href="#game">Game</a><a href="#alat">Alat</a><a href="#cara">Cara guna</a><a href="#hubungi">Hubungi</a></nav>
-  </div>
-
-  <div class="hero panel">
-    <div class="ribbon">PENCIPTA</div>
-    <div class="photo">
-      <img src="img/foto-zarif.jpg" alt="Zarif Zainol bersama isteri" onerror="this.remove()">
-      <div class="ini" aria-hidden="true">ZZ</div>
-      <svg class="star px" viewBox="0 0 11 11" aria-hidden="true" shape-rendering="crispEdges"><path fill="#2a1f22" d="M4 0h3v2h4v3H10v1H9v2h1v3H7V10H4v1H1V8h1V6H1V5H0V2h4z"/><path fill="#ffd23a" d="M5 1h1v2h4v1H9v1H8v1h1v1h1v1H9v1H7V9H4v1H2V9h1V7H2V6h1V5H2V4H1V3h4z"/><path fill="#fff6b0" d="M5 1h1v2H5zM2 3h2v1H2z"/></svg>
-    </div>
-    <div>
-      <p class="eyebrow">Selamat datang ke Arked Farmasi</p>
-      <h1 class="name">ZARIF ZAINOL</h1>
-      <div class="badges"><span class="rph">RPh 25633</span><span class="role">Pegawai Farmasi</span></div>
-      <p class="place">Hospital Kepala Batas, Pulau Pinang</p>
-      <p class="hello">Hai, saya Zarif!</p>
-      <p class="lead">Terima kasih kerana singgah. Saya mencipta game pixel-art ini supaya belajar tentang ubat jadi lebih seronok, untuk orang awam, pesakit, kanak-kanak dan warga kesihatan. Semua game percuma: main terus di laman ini, atau muat turun untuk panel pintar dan komputer.</p>
-      <div class="chips"><span class="chip"><b>4</b> game</span><span class="chip">Percuma</span><span class="chip">Boleh main tanpa internet</span><span class="chip">Sesuai untuk panel pintar</span></div>
-      <div class="cta"><a class="btn play" href="#game">▶ Lihat koleksi game</a><a class="btn ghost" href="#hubungi">Hubungi saya</a></div>
-    </div>
-  </div>
+<header>
+  <h1>Mana…?</h1>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <button class="lock" id="lock" aria-label="Tekan lama untuk mod Daddy">
+    <span class="ring"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+  </button>
 </header>
 
-<main class="wrap">
-  <section id="game" aria-labelledby="gameH">
-    <div class="sechead">
-      <div><h2 id="gameH">Koleksi Game</h2><p>Pilih game, tekan <b>Main online</b> untuk terus bermain, atau <b>Muat turun</b> untuk simpan failnya.</p></div>
-      <div class="filters" role="group" aria-label="Tapis ikut sasaran">
-        <button type="button" data-f="all" aria-pressed="true">Semua</button>
-        <button type="button" data-f="awam" aria-pressed="false">Orang awam</button>
-        <button type="button" data-f="staf" aria-pressed="false">Warga kesihatan</button>
-        <button type="button" data-f="kanak" aria-pressed="false">Kanak-kanak</button>
-      </div>
-    </div>
-    <div class="grid" id="grid"></div>
-  </section>
+<div id="game" style="display:contents">
+  <button class="q" id="q" aria-label="Dengar soalan sekali lagi"><b id="qt">Mana Daddy?</b><span class="spk"><svg viewBox="0 0 24 24" fill="none" stroke="#2f2a1a" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#2f2a1a"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></span></button>
+  <main class="board" id="board"></main>
+</div>
+<section class="win" id="win">
+  <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#f6c445"/><path d="M60 22l10 22 24 3-18 16 5 24-21-12-21 12 5-24-18-16 24-3z" fill="#fffaf2"/></svg>
+  <h2>Pandai Umar!</h2>
+  <button class="big" id="again">Main lagi</button>
+</section>
+<footer>Created by Zarif Zainol, RPh 25633</footer>
 
-  <section id="alat" aria-labelledby="alatH">
-    <div class="sechead"><div><h2 id="alatH">Alat Farmasi</h2><p>Alat kiraan untuk kegunaan harian warga farmasi. Boleh guna di komputer dan telefon.</p></div></div>
-    <div class="grid">
-      <article class="card panel">
-        <a class="shot" href="tools/chemo-calculator.html" target="_blank" rel="noopener" aria-label="Buka Chemo Dose Calculator">
-          <img src="img/chemo-calculator.jpg" alt="Skrin Chemo Dose Calculator" loading="lazy"></a>
-        <div class="body">
-          <h3>Chemo Dose Calculator</h3>
-          <div class="meta">Sehingga 4 ubat · Komputer &amp; telefon</div>
-          <div class="tags"><span class="tag staf">Warga kesihatan</span></div>
-          <p class="desc">Kira BSA (Mosteller), CrCl (Cockcroft–Gault), dos mg/m², mg/kg dan carboplatin (Calvert). Pilih ubat untuk kepekatan automatik, isi isipadu yang ditarik, dan semak beza peratus berbanding dos dikira dan dos lama.</p>
-          <p class="src">Alat bantu kiraan sahaja. Semua dos mesti disemak secara bebas mengikut protokol institusi.</p>
-          <div class="acts">
-            <a class="btn play" href="tools/chemo-calculator.html" target="_blank" rel="noopener">▶ Buka alat</a>
-            <a class="btn dl" href="tools/chemo-calculator.html" download="Chemo-Dose-Calculator.html">⬇ Muat turun</a>
-          </div>
-          <p class="cr">Dicipta oleh Zarif Zainol, RPh 25633</p>
-        </div>
-      </article>
-    </div>
-  </section>
+<section class="panel" id="panel" aria-label="Mod Daddy">
+ <div class="pin">
+  <div class="ph"><h2>Mod Daddy</h2><button class="btn pri" id="done">Siap, main</button></div>
+  <p class="note">Tukar gambar dan rakam suara awak untuk setiap item. Semuanya disimpan dalam tablet ni sahaja.</p>
 
-  <section id="cara" aria-labelledby="caraH">
-    <div class="sechead"><div><h2 id="caraH">Main di panel pintar</h2><p>Setiap game ialah satu fail HTML. Tiada pemasangan diperlukan.</p></div></div>
-    <div class="panel">
-      <div class="how">
-        <div class="step"><span class="n">1</span><div><h3>Muat turun</h3><p>Tekan <b>Muat turun</b> pada game pilihan. Fail .html disimpan dalam folder Downloads.</p></div></div>
-        <div class="step"><span class="n">2</span><div><h3>Salin ke peranti</h3><p>Pindahkan fail ke panel pintar atau komputer melalui pendrive, Google Drive atau WhatsApp.</p></div></div>
-        <div class="step"><span class="n">3</span><div><h3>Buka dengan Chrome</h3><p>Tekan fail itu dan pilih Chrome. Gunakan butang skrin penuh jika ada, atau tekan F11 di komputer.</p></div></div>
-      </div>
-      <p class="note">Tanpa internet, game tetap boleh dimain, tetapi huruf akan nampak lebih ringkas kerana fon dimuat dari internet.</p>
-    </div>
-  </section>
-  <section id="hubungi" aria-labelledby="hubH">
-    <div class="sechead"><div><h2 id="hubH">Jom berhubung</h2><p>Untuk kolaborasi, jemputan atau sekadar berkongsi idea.</p></div></div>
-    <div class="panel contact">
-      <div>
-        <h3>Mari bekerjasama</h3>
-        <p>Berminat menggunakan game ini di hospital, klinik atau sekolah anda? Ada idea untuk game pendidikan ubat yang baharu, atau mahu bekerjasama dalam projek kesihatan? Saya sangat mengalu-alukan anda menghubungi saya.</p>
-        <p>Maklum balas tentang game juga sangat dihargai.</p>
-      </div>
-      <div class="ways">
-        <div class="way mail"><span class="ic" aria-hidden="true"><svg viewBox="0 0 10 8" shape-rendering="crispEdges"><path fill="#fff" d="M0 0h10v8H0z"/><path fill="#2a1f22" d="M0 0h10v1H9v1H8v1H7v1H6v1H4V4H3V3H2V2H1V1H0zM0 7h10v1H0z"/></svg></span>
-          <div class="txt"><small>E-mel</small><a class="v" href="mailto:zarif@moh.gov.my">zarif@moh.gov.my</a></div>
-          <button class="copy-btn" type="button" data-copy="zarif@moh.gov.my">Salin</button></div>
-        <div class="way wa"><span class="ic" aria-hidden="true"><svg viewBox="0 0 11 10" shape-rendering="crispEdges"><path fill="#fff" d="M1 0h9v1h1v5h-1v1H5v1H4v1H3v1H2V7H1V6H0V1h1z"/><path fill="#2a1f22" d="M2 3h1v1H2zM5 3h1v1H5zM8 3h1v1H8z"/></svg></span>
-          <div class="txt"><small>WhatsApp</small><a class="v" href="https://wa.me/60135879478" target="_blank" rel="noopener">013-587 9478</a></div>
-          <button class="copy-btn" type="button" data-copy="0135879478">Salin</button></div>
-      </div>
-    </div>
-  </section>
-</main>
+  <h3>Berapa gambar satu soalan</h3>
+  <div class="seg" id="optN"></div>
+  <h3>Berapa soalan satu pusingan</h3>
+  <div class="seg" id="optR"></div>
+  <h3>Tunjuk nama bawah gambar</h3>
+  <div class="seg" id="optL"></div>
+  <h3>Bunyi</h3>
+  <div class="seg" id="optV"></div>
 
-<footer class="wrap" id="kredit">
-  <div class="panel foot">
-    <div>
-      <div class="who">Dicipta oleh <b>ZARIF ZAINOL</b> (RPh 25633) · Pegawai Farmasi, Hospital Kepala Batas, Pulau Pinang</div>
-      <p>E-mel: zarif@moh.gov.my · WhatsApp: 013-587 9478</p>
-      <p>Semua game untuk pendidikan dan latihan sahaja. Dos dan maklumat ubat telah dipermudahkan dan bukan pengganti nasihat doktor atau ahli farmasi.</p>
-    </div>
-    <div class="copy">© 2026 ZARIF ZAINOL</div>
-  </div>
-</footer>
+  <h3>Suara pujian</h3>
+  <p class="note">Bunyi bila Umar tekan gambar yang betul.</p>
+  <div class="praise" id="praise"></div>
+
+  <h3>Item</h3>
+  <div class="acts" style="margin-bottom:10px"><button class="btn pri" id="add">+ Tambah item</button></div>
+  <div id="rows"></div>
+
+  <h3>Tetapan semula</h3>
+  <div class="acts"><button class="btn" id="reset">Padam semua &amp; mula semula</button><span class="note" id="resetAsk"></span></div>
+ </div>
+</section>
+
+<input type="file" id="imgIn" accept="image/*" class="gone">
+<input type="file" id="audIn" accept="audio/*" capture class="gone">
 
 <script>
-const GAMES=[
- {id:'kaunter-demam',t:'Kaunter Demam',meta:'Syif 3 minit · 3 tahap kesukaran',tags:['awam','staf'],
-  d:'Jadi pegawai farmasi di kaunter demam. Baca preskripsi, kira jumlah biji dan botol, layan dua pesakit serentak dan pujuk pesakit yang tidak sabar.'},
- {id:'jom-susun-ubat',t:'Jom Susun Ubat',meta:'Misi 15 minit',tags:['staf'],
-  d:'Audit troli ubat sementara di pusat pemindahan. Betulkan label Tall Man, tampal tag LASA dan HAMS, dan jarakkan ubat yang rupanya serupa.',
-  src:'Rujukan: Senarai LASA & HAM, Unit Farmasi PKD Seberang Perai Utara, Bil 1/2026.'},
- {id:'jom-kuiz-ubat',t:'Jom Kuiz Ubat',meta:'3 tahap · 60 soalan',tags:['staf'],
-  d:'Kuiz kad pusing tentang keselamatan ubat asas: HAMS, jenis ralat ubat, MERS dan Matlamat Keselamatan Pesakit Malaysia. Soalan dalam Bahasa Inggeris.',
-  src:'Sumber: Malaysia Basic Medication Safety Module Part I (bank soalan).'},
- {id:'perangkap-kuman',t:'Perangkap Kuman',meta:'3 tahap · Bahasa Melayu / English',tags:['kanak','awam'],
-  d:'Kepung kuman dengan sabun sebelum ia terlepas, sambil belajar tip basuh tangan dan cara menggunakan ubat dengan betul.'},
-];
-const TAGN={awam:'Orang awam',staf:'Warga kesihatan',kanak:'Kanak-kanak'};
-const grid=document.getElementById('grid');
-grid.innerHTML=GAMES.map((g,i)=>`
- <article class="card panel" data-tags="${g.tags.join(' ')}">
-  <a class="shot" href="games/${g.id}.html" target="_blank" rel="noopener" aria-label="Main ${g.t}">
-   <img src="img/${g.id}.jpg" alt="Skrin utama ${g.t}" loading="lazy"><span class="num">${String(i+1).padStart(2,'0')}</span></a>
-  <div class="body">
-   <h3>${g.t}</h3>
-   <div class="meta">${g.meta}</div>
-   <div class="tags">${g.tags.map(t=>`<span class="tag ${t}">${TAGN[t]}</span>`).join('')}</div>
-   <p class="desc">${g.d}</p>
-   ${g.src?`<p class="src">${g.src}</p>`:''}
-   <div class="acts">
-    <a class="btn play" href="games/${g.id}.html" target="_blank" rel="noopener">▶ Main online</a>
-    <a class="btn dl" href="games/${g.id}.html" download="${g.t.replace(/\s+/g,'-')}.html">⬇ Muat turun</a>
-   </div>
-   <p class="cr">Dicipta oleh Zarif Zainol, RPh 25633</p>
-  </div>
- </article>`).join('');
-document.querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click',async()=>{
-  const v=b.dataset.copy,done=()=>{b.textContent='Disalin';b.classList.add('ok');setTimeout(()=>{b.textContent='Salin';b.classList.remove('ok')},1800)};
-  try{await navigator.clipboard.writeText(v);done()}catch(e){const r=document.createRange();r.selectNodeContents(b.parentNode.querySelector('.v'));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}
-}));
-document.querySelectorAll('.filters button').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
-  const f=b.dataset.f;
-  grid.querySelectorAll('.card').forEach(c=>{c.hidden=f!=='all'&&!c.dataset.tags.split(' ').includes(f)});
-}));
+{
+const face=(skin,hair,top)=>'<svg viewBox="0 0 64 64"><path d="M12 62c0-14 9-22 20-22s20 8 20 22" fill="'+top+'" stroke="#2f3a35" stroke-width="3"/><circle cx="32" cy="26" r="14" fill="'+skin+'" stroke="#2f3a35" stroke-width="3"/><path d="'+hair+'" fill="#2f3a35"/><circle cx="27" cy="27" r="1.8" fill="#2f3a35"/><circle cx="37" cy="27" r="1.8" fill="#2f3a35"/><path d="M27 33q5 4 10 0" fill="none" stroke="#2f3a35" stroke-width="2.4" stroke-linecap="round"/></svg>';
+const hijab=(top,fill)=>'<svg viewBox="0 0 64 64"><path d="M10 62c0-16 8-26 22-26s22 10 22 26" fill="'+top+'" stroke="#2f3a35" stroke-width="3"/><path d="M14 30a18 18 0 0 1 36 0v10c-4 6-10 8-18 8s-14-2-18-8z" fill="'+fill+'" stroke="#2f3a35" stroke-width="3"/><circle cx="32" cy="29" r="11" fill="#e8b48f" stroke="#2f3a35" stroke-width="2.4"/><circle cx="28" cy="29" r="1.6" fill="#2f3a35"/><circle cx="36" cy="29" r="1.6" fill="#2f3a35"/><path d="M28 34q4 3 8 0" fill="none" stroke="#2f3a35" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const ICON={
+daddy:face('#e8b48f','M18 24a14 12 0 0 1 28 0c-4-4-10-5-14-5s-10 1-14 5z','#7fae8f'),
+mommy:hijab('#e7a7a0','#c98fb5'),
+tokibu:hijab('#cfb48a','#8fb3c9'),
+tokabah:face('#d9a47e','M18 18h28v4H18z','#9aa7b8'),
+tokmama:hijab('#b6c7a3','#e2c26f'),
+wan:face('#d9a47e','M22 14q10-6 20 0v6H22z','#c7a37c'),
+susu:'<svg viewBox="0 0 64 64"><rect x="26" y="6" width="12" height="8" rx="3" fill="#f6c445" stroke="#2f3a35" stroke-width="3"/><path d="M22 18h20v36a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M22 14h20v4H22z" fill="#2f3a35"/><path d="M26 30h12M26 38h12M26 46h12" stroke="#c9d6dd" stroke-width="3"/></svg>',
+nasi:'<svg viewBox="0 0 64 64"><ellipse cx="32" cy="42" rx="26" ry="10" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M14 40a18 14 0 0 1 36 0z" fill="#fbf6ea" stroke="#2f3a35" stroke-width="3"/><circle cx="26" cy="32" r="2" fill="#2f3a35"/><circle cx="36" cy="30" r="2" fill="#2f3a35"/></svg>',
+sekolah:'<svg viewBox="0 0 64 64"><path d="M6 28L32 10l26 18" fill="#e0685a" stroke="#2f3a35" stroke-width="3" stroke-linejoin="round"/><rect x="12" y="28" width="40" height="28" fill="#fff" stroke="#2f3a35" stroke-width="3"/><rect x="27" y="40" width="10" height="16" fill="#7fae8f" stroke="#2f3a35" stroke-width="3"/><rect x="16" y="34" width="8" height="8" fill="#7cc6e8" stroke="#2f3a35" stroke-width="2.4"/><rect x="40" y="34" width="8" height="8" fill="#7cc6e8" stroke="#2f3a35" stroke-width="2.4"/><path d="M32 10V2h8v5h-8" fill="#f6c445" stroke="#2f3a35" stroke-width="2.4"/></svg>',
+star:'<svg viewBox="0 0 64 64"><path d="M32 6l7 16 18 2-13 12 4 18-16-9-16 9 4-18L7 24l18-2z" fill="#f6c445" stroke="#2f3a35" stroke-width="3" stroke-linejoin="round"/></svg>'
+};
+const DEF=[
+ ['daddy','Daddy','Mana Daddy?'],['mommy','Mommy','Mana Mommy?'],['tokibu','Tok Ibu','Mana Tok Ibu?'],
+ ['tokabah','Tok Abah','Mana Tok Abah?'],['tokmama','Tok Mama','Mana Tok Mama?'],['wan','Wan','Mana Wan?'],
+ ['susu','Botol susu','Mana botol susu Umar?'],['nasi','Nasi','Mana nasi Umar?'],['sekolah','Sekolah','Mana sekolah Umar?']
+].map(([id,label,ask])=>({id,label,ask,on:true}));
+const PRAISE_DEF=['Pandainya Umar!','Betul! Bagus Umar!','Yeay, Umar jumpa!'];
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---- storage ---- */
+let dbp=null;
+function db(){if(dbp)return dbp;dbp=new Promise(res=>{try{const r=indexedDB.open('mana-daddy',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}catch(e){res(null)}});return dbp}
+const mem={};
+async function get(k){const d=await db();if(!d)return mem[k];return new Promise(res=>{try{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(mem[k])}catch(e){res(mem[k])}})}
+async function put(k,v){mem[k]=v;const d=await db();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch(e){}}
+async function del(k){delete mem[k];const d=await db();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').delete(k)}catch(e){}}
+
+const fresh=()=>({items:DEF.map(x=>({...x})),n:2,rounds:3,names:1,vol:1,praise:PRAISE_DEF.slice()});
+let S=fresh();
+let media={};   /* id -> {img, aud} ; praise voices: 'p0','p1','p2' -> {aud} */
+let urls={};
+const save=()=>put('state',S);
+const saveMedia=id=>put('m_'+id,media[id]||{});
+const pic=it=>media[it.id]&&media[it.id].img?'<img alt="" src="'+esc(media[it.id].img)+'">':(ICON[it.id]||ICON.star);
+
+/* ---- sound ---- */
+let cur=null;
+function stopSound(){try{if(cur){cur.pause();cur=null}window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
+function tts(t){try{const s=window.speechSynthesis;if(!s)return;const u=new SpeechSynthesisUtterance(t);const v=s.getVoices();u.voice=v.find(x=>/^ms/i.test(x.lang))||v.find(x=>/^id/i.test(x.lang))||null;u.lang=u.voice?u.voice.lang:'ms-MY';u.rate=.85;u.volume=S.vol;s.speak(u)}catch(e){}}
+function say(key,text){
+  stopSound();if(S.vol===0)return;
+  const m=media[key];
+  if(m&&m.aud){if(!urls[key])urls[key]=URL.createObjectURL(m.aud);cur=new Audio(urls[key]);cur.volume=S.vol;cur.play().catch(()=>tts(text))}
+  else tts(text);
+}
+
+/* ---- game ---- */
+let G={round:0,target:null,lock:false,recent:[]};
+const pool=()=>S.items.filter(i=>i.on);
+function dots(){$('#dots').innerHTML=Array.from({length:S.rounds},(_,i)=>'<i class="'+(i<G.round?'on':'')+'"></i>').join('')}
+function newQ(speak){
+  const p=pool();
+  if(p.length<2){$('#qt').textContent='Daddy, tambah sekurang-kurangnya 2 item dulu';$('#board').innerHTML='';return}
+  const n=Math.min(S.n,p.length);
+  let cand=p.filter(i=>!G.recent.includes(i.id));if(!cand.length)cand=p;
+  const t=cand[Math.random()*cand.length|0];
+  G.recent=[t.id,...G.recent].slice(0,Math.min(2,p.length-1));
+  const opts=shuffle([t,...shuffle(p.filter(i=>i.id!==t.id)).slice(0,n-1)]);
+  G.target=t;G.lock=false;G.miss=0;
+  $('#qt').textContent=t.ask;
+  const b=$('#board');b.className='board n'+n;b.style.setProperty('--n',n);
+  b.innerHTML=opts.map(o=>'<button class="c'+(S.names?'':' hide-names')+'" data-id="'+esc(o.id)+'" aria-label="'+esc(o.label)+'"><span class="pic">'+pic(o)+'</span><b>'+esc(o.label)+'</b></button>').join('');
+  dots();
+  if(speak)say(t.id,t.ask);
+}
+function start(){G.round=0;$('#win').classList.remove('on');$('#game').style.display='contents';newQ(true)}
+$('#q').addEventListener('click',()=>G.target&&say(G.target.id,G.target.ask));
+$('#board').addEventListener('click',e=>{
+  const el=e.target.closest('.c');if(!el||G.lock)return;
+  if(el.dataset.id===G.target.id){
+    G.lock=true;el.classList.add('yes');
+    document.querySelectorAll('.c').forEach(c=>{if(c!==el)c.classList.add('dim')});
+    const k=Math.random()*S.praise.length|0;say('p'+k,S.praise[k]);
+    G.round++;dots();
+    setTimeout(()=>{if(G.round>=S.rounds){$('#game').style.display='none';$('#win').classList.add('on');say('p'+k,'Pandai Umar!')}else newQ(true)},2200);
+  }else{
+    /* no "wrong" sound: gently show the right picture and ask again */
+    G.miss++;const r=document.querySelector('.c[data-id="'+CSS.escape(G.target.id)+'"]');
+    if(r){r.classList.remove('nudge');void r.offsetWidth;r.classList.add('nudge')}
+    say(G.target.id,G.target.ask);
+  }
+});
+$('#again').addEventListener('click',start);
+
+/* ---- hold-to-open parent mode ---- */
+let ht=null;const lock=$('#lock');
+lock.addEventListener('pointerdown',e=>{e.preventDefault();lock.classList.add('hold');ht=setTimeout(()=>{lock.classList.remove('hold');openPanel()},1600)});
+['pointerup','pointerleave','pointercancel'].forEach(t=>lock.addEventListener(t,()=>{clearTimeout(ht);lock.classList.remove('hold')}));
+lock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openPanel()});
+lock.addEventListener('contextmenu',e=>e.preventDefault());
+function openPanel(){stopSound();renderPanel();$('#panel').classList.add('open')}
+$('#done').addEventListener('click',()=>{stopRec();$('#panel').classList.remove('open');start()});
+
+function seg(el,opts,val,fn){el.innerHTML=opts.map(o=>'<button class="btn" aria-pressed="'+(o[0]===val)+'" data-v="'+o[0]+'">'+o[1]+'</button>').join('');el.onclick=e=>{const b=e.target.closest('button');if(!b)return;fn(+b.dataset.v);save();renderPanel()}}
+const recBtn=key=>'<button class="btn '+(recId===key?'rec':'')+'" data-a="rec" data-key="'+esc(key)+'">'+(recId===key?'■ Berhenti':'● Rakam suara')+'</button>';
+function renderPanel(){
+  seg($('#optN'),[[2,'2 gambar'],[3,'3 gambar'],[4,'4 gambar']],S.n,v=>S.n=v);
+  seg($('#optR'),[[3,'3 soalan'],[5,'5 soalan'],[8,'8 soalan']],S.rounds,v=>S.rounds=v);
+  seg($('#optL'),[[1,'Tunjuk'],[0,'Sorok']],S.names,v=>S.names=v);
+  seg($('#optV'),[[0,'Senyap'],[.5,'Perlahan'],[1,'Biasa']],S.vol,v=>S.vol=v);
+  $('#praise').innerHTML=S.praise.map((p,i)=>{const k='p'+i,m=media[k]||{};return '<div class="row" style="grid-template-columns:minmax(0,1fr)"><div><label for="pr'+i+'">Pujian '+(i+1)+'</label><input type="text" id="pr'+i+'" data-p="'+i+'" value="'+esc(p)+'"><div class="acts">'+recBtn(k)+'<button class="btn" data-a="play" data-key="'+k+'" data-text="'+esc(p)+'">▶ Dengar</button>'+(m.aud?'<button class="btn" data-a="noaud" data-key="'+k+'">Padam suara</button>':'')+'<span class="tag">'+(m.aud?'Suara Daddy':'Suara tablet')+'</span></div></div></div>'}).join('');
+  $('#rows').innerHTML=S.items.map((it,i)=>{const m=media[it.id]||{};return '<div class="row'+(it.on?'':' off')+'" data-i="'+i+'">'+
+    '<div class="thumb">'+pic(it)+'</div><div>'+
+    '<div class="f"><div><label for="l'+i+'">Nama</label><input type="text" id="l'+i+'" data-k="label" value="'+esc(it.label)+'"></div>'+
+    '<div><label for="a'+i+'">Soalan</label><input type="text" id="a'+i+'" data-k="ask" value="'+esc(it.ask)+'"></div></div>'+
+    '<div class="acts"><button class="btn" data-a="img" data-key="'+esc(it.id)+'">'+(m.img?'Tukar gambar':'+ Letak gambar')+'</button>'+
+    recBtn(it.id)+'<button class="btn" data-a="play" data-key="'+esc(it.id)+'" data-text="'+esc(it.ask)+'">▶ Dengar</button>'+
+    (m.img?'<button class="btn" data-a="noimg" data-key="'+esc(it.id)+'">Buang gambar</button>':'')+
+    (m.aud?'<button class="btn" data-a="noaud" data-key="'+esc(it.id)+'">Padam suara</button>':'')+
+    '<button class="btn" data-a="on">'+(it.on?'Rehatkan':'Guna semula')+'</button>'+
+    (ICON[it.id]?'':'<button class="btn" data-a="rm">Buang item</button>')+
+    '<span class="tag">'+(m.img?'Gambar sendiri':'Gambar lukisan')+' · '+(m.aud?'Suara Daddy':'Suara tablet')+'</span></div></div></div>'}).join('');
+}
+$('#praise').addEventListener('input',e=>{const i=e.target.dataset.p;if(i!==undefined){S.praise[+i]=e.target.value;save()}});
+$('#rows').addEventListener('input',e=>{const r=e.target.closest('.row');if(!r||!e.target.dataset.k)return;S.items[+r.dataset.i][e.target.dataset.k]=e.target.value;save()});
+$('#add').addEventListener('click',()=>{const id='x'+Date.now().toString(36);S.items.unshift({id,label:'Item baru',ask:'Mana …?',on:true});save();renderPanel();document.getElementById('l0').focus()});
+
+let target=null,armRm=null;
+$('#panel').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,key=b.dataset.key;
+  const row=b.closest('[data-i]');const it=row?S.items[+row.dataset.i]:null;
+  if(a==='play')say(key,b.dataset.text);
+  if(a==='img'){target=key;$('#imgIn').value='';$('#imgIn').click()}
+  if(a==='noimg'){delete media[key].img;await saveMedia(key);renderPanel()}
+  if(a==='noaud'){delete media[key].aud;delete urls[key];await saveMedia(key);renderPanel()}
+  if(a==='rec'){if(recId===key)stopRec();else startRec(key)}
+  if(a==='on'&&it){it.on=!it.on;save();renderPanel()}
+  if(a==='rm'&&it){if(armRm!==it.id){armRm=it.id;b.textContent='Tekan lagi untuk buang';setTimeout(()=>{armRm=null},3000);return}
+    S.items.splice(+row.dataset.i,1);await del('m_'+it.id);delete media[it.id];save();renderPanel()}
+});
+
+/* photo: crop to square, 480px */
+$('#imgIn').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f||!target)return;const id=target;
+  const im=new Image();im.onload=async()=>{
+    const s=480,cv=document.createElement('canvas');cv.width=cv.height=s;
+    const k=Math.min(im.width,im.height);cv.getContext('2d').drawImage(im,(im.width-k)/2,(im.height-k)/2,k,k,0,0,s,s);
+    media[id]=media[id]||{};media[id].img=cv.toDataURL('image/jpeg',.85);URL.revokeObjectURL(im.src);
+    await saveMedia(id);renderPanel();
+  };im.src=URL.createObjectURL(f);
+});
+
+/* voice: mic when allowed, else tablet recorder / audio file */
+let recId=null,rec=null,chunks=[];
+async function startRec(key){
+  stopRec();
+  try{
+    const st=await navigator.mediaDevices.getUserMedia({audio:true});
+    rec=new MediaRecorder(st);chunks=[];recId=key;
+    rec.ondataavailable=ev=>chunks.push(ev.data);
+    rec.onstop=async()=>{st.getTracks().forEach(t=>t.stop());media[key]=media[key]||{};media[key].aud=new Blob(chunks,{type:rec.mimeType||'audio/webm'});delete urls[key];await saveMedia(key);recId=null;rec=null;renderPanel()};
+    rec.start();renderPanel();setTimeout(()=>{if(recId===key)stopRec()},6000);
+  }catch(err){recId=null;target=key;$('#audIn').value='';$('#audIn').click()}
+}
+function stopRec(){try{if(rec&&rec.state!=='inactive')rec.stop()}catch(e){}}
+$('#audIn').addEventListener('change',async e=>{const f=e.target.files[0];if(!f||!target)return;media[target]=media[target]||{};media[target].aud=f;delete urls[target];await saveMedia(target);renderPanel()});
+
+let armed=false;
+$('#reset').addEventListener('click',async()=>{
+  if(!armed){armed=true;$('#resetAsk').textContent='Tekan sekali lagi untuk sahkan.';setTimeout(()=>{armed=false;$('#resetAsk').textContent=''},4000);return}
+  armed=false;for(const k of Object.keys(media))await del('m_'+k);
+  S=fresh();media={};urls={};save();$('#resetAsk').textContent='Sudah dipadam.';renderPanel();
+});
+
+/* load */
+(async()=>{
+  try{
+    const s=await get('state');if(s&&s.items)S={...fresh(),...s};
+    const keys=[...S.items.map(i=>i.id),...S.praise.map((_,i)=>'p'+i)];
+    for(const k of keys){const m=await get('m_'+k);if(m)media[k]=m}
+  }catch(e){}
+  newQ(false);
+})();
+newQ(false);
+try{speechSynthesis&&speechSynthesis.getVoices()}catch(e){}
+}
 </script>
 </body>
 </html>
