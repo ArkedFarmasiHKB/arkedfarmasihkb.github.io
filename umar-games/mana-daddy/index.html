@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Mana Daddy?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: tender, calm, sensory-friendly — a gentle find-the-picture game for a 3-year-old
+   IDEA: a family photo album on the floor; Daddy asks "mana…?" and Umar points
+   PICTURE: the question bubble and 2–4 big round photo cards fill the screen
+   COLOUR and TYPE: warm oat ground, sage + clay cards, sun-yellow for the right answer; Baloo 2
+   LAYOUT: question on top, photo cards below, parent mode behind a hold-to-open lock */
+:root{color-scheme:light dark;
+--bg:light-dark(#f4ede2,#1e2321);--card:light-dark(#fffaf2,#2b322f);--ink:light-dark(#2f3a35,#eef1ea);
+--soft:light-dark(#7c8a82,#a9b5ae);--sage:light-dark(#cfe0d2,#3d5246);--clay:light-dark(#f1d3c2,#5a4136);
+--sun:#f6c445;--line:light-dark(#e4d9c8,#3a423e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 "Baloo 2",system-ui,sans-serif;overflow-x:clip;user-select:none;-webkit-user-select:none;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:14px max(4vw,14px) 4px}
+h1{margin:0;font-size:clamp(24px,3.6vw,34px);line-height:1.05;font-weight:800;flex:1}
+.dots{display:flex;gap:6px}.dots i{width:14px;height:14px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--sun)}
+.lock{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--soft);display:grid;place-items:center;position:relative;cursor:pointer;flex:none}
+.lock svg{width:24px;height:24px}
+.lock .ring{position:absolute;inset:-4px;border-radius:50%;border:4px solid var(--sun);clip-path:inset(0 100% 0 0)}
+.lock.hold .ring{clip-path:inset(0 0 0 0);transition:clip-path 1.6s linear}
+.q{margin:8px max(4vw,14px);border-radius:26px;background:var(--card);border:2px solid var(--line);display:flex;align-items:center;gap:14px;padding:10px 18px;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.q b{font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.05;flex:1}
+.q .spk{width:54px;height:54px;border-radius:50%;background:var(--sun);display:grid;place-items:center;flex:none}
+.q .spk svg{width:28px;height:28px}
+.board{flex:1;display:grid;gap:clamp(12px,2.4vw,24px);padding:10px max(4vw,14px) 14px;grid-template-columns:repeat(var(--n),minmax(0,1fr));align-content:center}
+@media (orientation:portrait),(max-width:560px){.board.n3,.board.n4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.c{border:0;border-radius:30px;background:var(--card);box-shadow:0 6px 0 var(--line);display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;color:var(--ink);font:inherit;cursor:pointer;transition:transform .2s,opacity .3s}
+.c:nth-child(odd) .pic{background:var(--sage)}.c:nth-child(even) .pic{background:var(--clay)}
+.pic{width:min(88%,260px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:cover}.pic svg{width:72%;height:72%}
+.c b{font-size:clamp(20px,3vw,28px);font-weight:700;line-height:1}
+.c.hide-names b{visibility:hidden}
+.c.yes{box-shadow:0 0 0 8px var(--sun),0 6px 0 var(--line);transform:scale(1.05)}
+.c.dim{opacity:.35}
+.c.nudge .pic{animation:glow 1s ease-in-out 2}
+@keyframes glow{50%{box-shadow:0 0 0 10px var(--sun)}}
+@media (prefers-reduced-motion:reduce){.c{transition:none}.c.yes{transform:none}.c.nudge .pic{animation:none;box-shadow:0 0 0 8px var(--sun)}}
+.win{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;text-align:center}
+.win.on{display:flex}
+.win svg{width:min(50vw,260px);height:auto}
+.win h2{margin:0;font-size:clamp(36px,7vw,64px);line-height:1}
+.big{min-height:64px;padding:10px 30px;border-radius:22px;border:0;background:var(--sun);color:#2f2a1a;font:800 24px "Baloo 2",system-ui,sans-serif;cursor:pointer}
+footer{text-align:center;font-size:13px;color:var(--soft);padding:4px 10px 12px}
+.gone{display:none!important}
+/* parent panel */
+.panel{position:fixed;inset:0;background:var(--bg);overflow-y:auto;display:none;z-index:5}
+.panel.open{display:block}
+.pin{max-width:880px;margin:0 auto;padding:18px max(4vw,14px) 40px}
+.ph{display:flex;align-items:center;gap:10px}
+.ph h2{flex:1;margin:0;font-size:30px;line-height:1.1}
+h3{font-size:20px;margin:22px 0 8px}
+.btn{min-height:44px;padding:8px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 16px "Baloo 2",system-ui,sans-serif;cursor:pointer}
+.btn.pri{background:var(--sun);border-color:var(--sun);color:#2f2a1a}
+.btn.rec{background:#e0685a;border-color:#e0685a;color:#fff}
+.btn:focus-visible,.c:focus-visible,.lock:focus-visible,.q:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg .btn[aria-pressed=true]{background:var(--sun);border-color:var(--sun);color:#2f2a1a}
+.row{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;background:var(--card);border-radius:18px;padding:12px;margin-bottom:10px;border:2px solid var(--line)}
+.row.off{opacity:.55}
+.thumb{width:84px;height:84px;border-radius:50%;overflow:hidden;background:var(--sage);display:grid;place-items:center}
+.thumb img{width:100%;height:100%;object-fit:cover}.thumb svg{width:72%;height:72%}
+.f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(max-width:560px){.f{grid-template-columns:minmax(0,1fr)}.row{grid-template-columns:64px minmax(0,1fr)}.thumb{width:64px;height:64px}}
+label{font-size:13px;color:var(--soft);display:block}
+input[type=text]{width:100%;font:16px "Baloo 2",system-ui,sans-serif;min-height:44px;padding:6px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+.tag{font-size:13px;padding:2px 10px;border-radius:99px;background:var(--sage)}
+.note{font-size:14px;color:var(--soft);margin:4px 0}
+.praise{display:grid;gap:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Mana…?</h1>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <button class="lock" id="lock" aria-label="Tekan lama untuk mod Daddy">
+    <span class="ring"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+  </button>
+</header>
+
+<div id="game" style="display:contents">
+  <button class="q" id="q" aria-label="Dengar soalan sekali lagi"><b id="qt">Mana Daddy?</b><span class="spk"><svg viewBox="0 0 24 24" fill="none" stroke="#2f2a1a" stroke-width="2.2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#2f2a1a"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></span></button>
+  <main class="board" id="board"></main>
+</div>
+<section class="win" id="win">
+  <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#f6c445"/><path d="M60 22l10 22 24 3-18 16 5 24-21-12-21 12 5-24-18-16 24-3z" fill="#fffaf2"/></svg>
+  <h2>Pandai Umar!</h2>
+  <button class="big" id="again">Main lagi</button>
+</section>
+<footer>Created by Zarif Zainol, RPh 25633</footer>
+
+<section class="panel" id="panel" aria-label="Mod Daddy">
+ <div class="pin">
+  <div class="ph"><h2>Mod Daddy</h2><button class="btn pri" id="done">Siap, main</button></div>
+  <p class="note">Tukar gambar dan rakam suara awak untuk setiap item. Semuanya disimpan dalam tablet ni sahaja.</p>
+
+  <h3>Berapa gambar satu soalan</h3>
+  <div class="seg" id="optN"></div>
+  <h3>Berapa soalan satu pusingan</h3>
+  <div class="seg" id="optR"></div>
+  <h3>Tunjuk nama bawah gambar</h3>
+  <div class="seg" id="optL"></div>
+  <h3>Bunyi</h3>
+  <div class="seg" id="optV"></div>
+
+  <h3>Suara pujian</h3>
+  <p class="note">Bunyi bila Umar tekan gambar yang betul.</p>
+  <div class="praise" id="praise"></div>
+
+  <h3>Item</h3>
+  <div class="acts" style="margin-bottom:10px"><button class="btn pri" id="add">+ Tambah item</button></div>
+  <div id="rows"></div>
+
+  <h3>Tetapan semula</h3>
+  <div class="acts"><button class="btn" id="reset">Padam semua &amp; mula semula</button><span class="note" id="resetAsk"></span></div>
+ </div>
+</section>
+
+<input type="file" id="imgIn" accept="image/*" class="gone">
+<input type="file" id="audIn" accept="audio/*" capture class="gone">
+
+<script>
+{
+const face=(skin,hair,top)=>'<svg viewBox="0 0 64 64"><path d="M12 62c0-14 9-22 20-22s20 8 20 22" fill="'+top+'" stroke="#2f3a35" stroke-width="3"/><circle cx="32" cy="26" r="14" fill="'+skin+'" stroke="#2f3a35" stroke-width="3"/><path d="'+hair+'" fill="#2f3a35"/><circle cx="27" cy="27" r="1.8" fill="#2f3a35"/><circle cx="37" cy="27" r="1.8" fill="#2f3a35"/><path d="M27 33q5 4 10 0" fill="none" stroke="#2f3a35" stroke-width="2.4" stroke-linecap="round"/></svg>';
+const hijab=(top,fill)=>'<svg viewBox="0 0 64 64"><path d="M10 62c0-16 8-26 22-26s22 10 22 26" fill="'+top+'" stroke="#2f3a35" stroke-width="3"/><path d="M14 30a18 18 0 0 1 36 0v10c-4 6-10 8-18 8s-14-2-18-8z" fill="'+fill+'" stroke="#2f3a35" stroke-width="3"/><circle cx="32" cy="29" r="11" fill="#e8b48f" stroke="#2f3a35" stroke-width="2.4"/><circle cx="28" cy="29" r="1.6" fill="#2f3a35"/><circle cx="36" cy="29" r="1.6" fill="#2f3a35"/><path d="M28 34q4 3 8 0" fill="none" stroke="#2f3a35" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const ICON={
+daddy:face('#e8b48f','M18 24a14 12 0 0 1 28 0c-4-4-10-5-14-5s-10 1-14 5z','#7fae8f'),
+mommy:hijab('#e7a7a0','#c98fb5'),
+tokibu:hijab('#cfb48a','#8fb3c9'),
+tokabah:face('#d9a47e','M18 18h28v4H18z','#9aa7b8'),
+tokmama:hijab('#b6c7a3','#e2c26f'),
+wan:face('#d9a47e','M22 14q10-6 20 0v6H22z','#c7a37c'),
+susu:'<svg viewBox="0 0 64 64"><rect x="26" y="6" width="12" height="8" rx="3" fill="#f6c445" stroke="#2f3a35" stroke-width="3"/><path d="M22 18h20v36a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M22 14h20v4H22z" fill="#2f3a35"/><path d="M26 30h12M26 38h12M26 46h12" stroke="#c9d6dd" stroke-width="3"/></svg>',
+nasi:'<svg viewBox="0 0 64 64"><ellipse cx="32" cy="42" rx="26" ry="10" fill="#fff" stroke="#2f3a35" stroke-width="3"/><path d="M14 40a18 14 0 0 1 36 0z" fill="#fbf6ea" stroke="#2f3a35" stroke-width="3"/><circle cx="26" cy="32" r="2" fill="#2f3a35"/><circle cx="36" cy="30" r="2" fill="#2f3a35"/></svg>',
+sekolah:'<svg viewBox="0 0 64 64"><path d="M6 28L32 10l26 18" fill="#e0685a" stroke="#2f3a35" stroke-width="3" stroke-linejoin="round"/><rect x="12" y="28" width="40" height="28" fill="#fff" stroke="#2f3a35" stroke-width="3"/><rect x="27" y="40" width="10" height="16" fill="#7fae8f" stroke="#2f3a35" stroke-width="3"/><rect x="16" y="34" width="8" height="8" fill="#7cc6e8" stroke="#2f3a35" stroke-width="2.4"/><rect x="40" y="34" width="8" height="8" fill="#7cc6e8" stroke="#2f3a35" stroke-width="2.4"/><path d="M32 10V2h8v5h-8" fill="#f6c445" stroke="#2f3a35" stroke-width="2.4"/></svg>',
+star:'<svg viewBox="0 0 64 64"><path d="M32 6l7 16 18 2-13 12 4 18-16-9-16 9 4-18L7 24l18-2z" fill="#f6c445" stroke="#2f3a35" stroke-width="3" stroke-linejoin="round"/></svg>'
+};
+const DEF=[
+ ['daddy','Daddy','Mana Daddy?'],['mommy','Mommy','Mana Mommy?'],['tokibu','Tok Ibu','Mana Tok Ibu?'],
+ ['tokabah','Tok Abah','Mana Tok Abah?'],['tokmama','Tok Mama','Mana Tok Mama?'],['wan','Wan','Mana Wan?'],
+ ['susu','Botol susu','Mana botol susu Umar?'],['nasi','Nasi','Mana nasi Umar?'],['sekolah','Sekolah','Mana sekolah Umar?']
+].map(([id,label,ask])=>({id,label,ask,on:true}));
+const PRAISE_DEF=['Pandainya Umar!','Betul! Bagus Umar!','Yeay, Umar jumpa!'];
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---- storage ---- */
+let dbp=null;
+function db(){if(dbp)return dbp;dbp=new Promise(res=>{try{const r=indexedDB.open('mana-daddy',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}catch(e){res(null)}});return dbp}
+const mem={};
+async function get(k){const d=await db();if(!d)return mem[k];return new Promise(res=>{try{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(mem[k])}catch(e){res(mem[k])}})}
+async function put(k,v){mem[k]=v;const d=await db();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').put(v,k)}catch(e){}}
+async function del(k){delete mem[k];const d=await db();if(!d)return;try{d.transaction('kv','readwrite').objectStore('kv').delete(k)}catch(e){}}
+
+const fresh=()=>({items:DEF.map(x=>({...x})),n:2,rounds:3,names:1,vol:1,praise:PRAISE_DEF.slice()});
+let S=fresh();
+let media={};   /* id -> {img, aud} ; praise voices: 'p0','p1','p2' -> {aud} */
+let urls={};
+const save=()=>put('state',S);
+const saveMedia=id=>put('m_'+id,media[id]||{});
+const pic=it=>media[it.id]&&media[it.id].img?'<img alt="" src="'+esc(media[it.id].img)+'">':(ICON[it.id]||ICON.star);
+
+/* ---- sound ---- */
+let cur=null;
+function stopSound(){try{if(cur){cur.pause();cur=null}window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
+function tts(t){try{const s=window.speechSynthesis;if(!s)return;const u=new SpeechSynthesisUtterance(t);const v=s.getVoices();u.voice=v.find(x=>/^ms/i.test(x.lang))||v.find(x=>/^id/i.test(x.lang))||null;u.lang=u.voice?u.voice.lang:'ms-MY';u.rate=.85;u.volume=S.vol;s.speak(u)}catch(e){}}
+function say(key,text){
+  stopSound();if(S.vol===0)return;
+  const m=media[key];
+  if(m&&m.aud){if(!urls[key])urls[key]=URL.createObjectURL(m.aud);cur=new Audio(urls[key]);cur.volume=S.vol;cur.play().catch(()=>tts(text))}
+  else tts(text);
+}
+
+/* ---- game ---- */
+let G={round:0,target:null,lock:false,recent:[]};
+const pool=()=>S.items.filter(i=>i.on);
+function dots(){$('#dots').innerHTML=Array.from({length:S.rounds},(_,i)=>'<i class="'+(i<G.round?'on':'')+'"></i>').join('')}
+function newQ(speak){
+  const p=pool();
+  if(p.length<2){$('#qt').textContent='Daddy, tambah sekurang-kurangnya 2 item dulu';$('#board').innerHTML='';return}
+  const n=Math.min(S.n,p.length);
+  let cand=p.filter(i=>!G.recent.includes(i.id));if(!cand.length)cand=p;
+  const t=cand[Math.random()*cand.length|0];
+  G.recent=[t.id,...G.recent].slice(0,Math.min(2,p.length-1));
+  const opts=shuffle([t,...shuffle(p.filter(i=>i.id!==t.id)).slice(0,n-1)]);
+  G.target=t;G.lock=false;G.miss=0;
+  $('#qt').textContent=t.ask;
+  const b=$('#board');b.className='board n'+n;b.style.setProperty('--n',n);
+  b.innerHTML=opts.map(o=>'<button class="c'+(S.names?'':' hide-names')+'" data-id="'+esc(o.id)+'" aria-label="'+esc(o.label)+'"><span class="pic">'+pic(o)+'</span><b>'+esc(o.label)+'</b></button>').join('');
+  dots();
+  if(speak)say(t.id,t.ask);
+}
+function start(){G.round=0;$('#win').classList.remove('on');$('#game').style.display='contents';newQ(true)}
+$('#q').addEventListener('click',()=>G.target&&say(G.target.id,G.target.ask));
+$('#board').addEventListener('click',e=>{
+  const el=e.target.closest('.c');if(!el||G.lock)return;
+  if(el.dataset.id===G.target.id){
+    G.lock=true;el.classList.add('yes');
+    document.querySelectorAll('.c').forEach(c=>{if(c!==el)c.classList.add('dim')});
+    const k=Math.random()*S.praise.length|0;say('p'+k,S.praise[k]);
+    G.round++;dots();
+    setTimeout(()=>{if(G.round>=S.rounds){$('#game').style.display='none';$('#win').classList.add('on');say('p'+k,'Pandai Umar!')}else newQ(true)},2200);
+  }else{
+    /* no "wrong" sound: gently show the right picture and ask again */
+    G.miss++;const r=document.querySelector('.c[data-id="'+CSS.escape(G.target.id)+'"]');
+    if(r){r.classList.remove('nudge');void r.offsetWidth;r.classList.add('nudge')}
+    say(G.target.id,G.target.ask);
+  }
+});
+$('#again').addEventListener('click',start);
+
+/* ---- hold-to-open parent mode ---- */
+let ht=null;const lock=$('#lock');
+lock.addEventListener('pointerdown',e=>{e.preventDefault();lock.classList.add('hold');ht=setTimeout(()=>{lock.classList.remove('hold');openPanel()},1600)});
+['pointerup','pointerleave','pointercancel'].forEach(t=>lock.addEventListener(t,()=>{clearTimeout(ht);lock.classList.remove('hold')}));
+lock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openPanel()});
+lock.addEventListener('contextmenu',e=>e.preventDefault());
+function openPanel(){stopSound();renderPanel();$('#panel').classList.add('open')}
+$('#done').addEventListener('click',()=>{stopRec();$('#panel').classList.remove('open');start()});
+
+function seg(el,opts,val,fn){el.innerHTML=opts.map(o=>'<button class="btn" aria-pressed="'+(o[0]===val)+'" data-v="'+o[0]+'">'+o[1]+'</button>').join('');el.onclick=e=>{const b=e.target.closest('button');if(!b)return;fn(+b.dataset.v);save();renderPanel()}}
+const recBtn=key=>'<button class="btn '+(recId===key?'rec':'')+'" data-a="rec" data-key="'+esc(key)+'">'+(recId===key?'■ Berhenti':'● Rakam suara')+'</button>';
+function renderPanel(){
+  seg($('#optN'),[[2,'2 gambar'],[3,'3 gambar'],[4,'4 gambar']],S.n,v=>S.n=v);
+  seg($('#optR'),[[3,'3 soalan'],[5,'5 soalan'],[8,'8 soalan']],S.rounds,v=>S.rounds=v);
+  seg($('#optL'),[[1,'Tunjuk'],[0,'Sorok']],S.names,v=>S.names=v);
+  seg($('#optV'),[[0,'Senyap'],[.5,'Perlahan'],[1,'Biasa']],S.vol,v=>S.vol=v);
+  $('#praise').innerHTML=S.praise.map((p,i)=>{const k='p'+i,m=media[k]||{};return '<div class="row" style="grid-template-columns:minmax(0,1fr)"><div><label for="pr'+i+'">Pujian '+(i+1)+'</label><input type="text" id="pr'+i+'" data-p="'+i+'" value="'+esc(p)+'"><div class="acts">'+recBtn(k)+'<button class="btn" data-a="play" data-key="'+k+'" data-text="'+esc(p)+'">▶ Dengar</button>'+(m.aud?'<button class="btn" data-a="noaud" data-key="'+k+'">Padam suara</button>':'')+'<span class="tag">'+(m.aud?'Suara Daddy':'Suara tablet')+'</span></div></div></div>'}).join('');
+  $('#rows').innerHTML=S.items.map((it,i)=>{const m=media[it.id]||{};return '<div class="row'+(it.on?'':' off')+'" data-i="'+i+'">'+
+    '<div class="thumb">'+pic(it)+'</div><div>'+
+    '<div class="f"><div><label for="l'+i+'">Nama</label><input type="text" id="l'+i+'" data-k="label" value="'+esc(it.label)+'"></div>'+
+    '<div><label for="a'+i+'">Soalan</label><input type="text" id="a'+i+'" data-k="ask" value="'+esc(it.ask)+'"></div></div>'+
+    '<div class="acts"><button class="btn" data-a="img" data-key="'+esc(it.id)+'">'+(m.img?'Tukar gambar':'+ Letak gambar')+'</button>'+
+    recBtn(it.id)+'<button class="btn" data-a="play" data-key="'+esc(it.id)+'" data-text="'+esc(it.ask)+'">▶ Dengar</button>'+
+    (m.img?'<button class="btn" data-a="noimg" data-key="'+esc(it.id)+'">Buang gambar</button>':'')+
+    (m.aud?'<button class="btn" data-a="noaud" data-key="'+esc(it.id)+'">Padam suara</button>':'')+
+    '<button class="btn" data-a="on">'+(it.on?'Rehatkan':'Guna semula')+'</button>'+
+    (ICON[it.id]?'':'<button class="btn" data-a="rm">Buang item</button>')+
+    '<span class="tag">'+(m.img?'Gambar sendiri':'Gambar lukisan')+' · '+(m.aud?'Suara Daddy':'Suara tablet')+'</span></div></div></div>'}).join('');
+}
+$('#praise').addEventListener('input',e=>{const i=e.target.dataset.p;if(i!==undefined){S.praise[+i]=e.target.value;save()}});
+$('#rows').addEventListener('input',e=>{const r=e.target.closest('.row');if(!r||!e.target.dataset.k)return;S.items[+r.dataset.i][e.target.dataset.k]=e.target.value;save()});
+$('#add').addEventListener('click',()=>{const id='x'+Date.now().toString(36);S.items.unshift({id,label:'Item baru',ask:'Mana …?',on:true});save();renderPanel();document.getElementById('l0').focus()});
+
+let target=null,armRm=null;
+$('#panel').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,key=b.dataset.key;
+  const row=b.closest('[data-i]');const it=row?S.items[+row.dataset.i]:null;
+  if(a==='play')say(key,b.dataset.text);
+  if(a==='img'){target=key;$('#imgIn').value='';$('#imgIn').click()}
+  if(a==='noimg'){delete media[key].img;await saveMedia(key);renderPanel()}
+  if(a==='noaud'){delete media[key].aud;delete urls[key];await saveMedia(key);renderPanel()}
+  if(a==='rec'){if(recId===key)stopRec();else startRec(key)}
+  if(a==='on'&&it){it.on=!it.on;save();renderPanel()}
+  if(a==='rm'&&it){if(armRm!==it.id){armRm=it.id;b.textContent='Tekan lagi untuk buang';setTimeout(()=>{armRm=null},3000);return}
+    S.items.splice(+row.dataset.i,1);await del('m_'+it.id);delete media[it.id];save();renderPanel()}
+});
+
+/* photo: crop to square, 480px */
+$('#imgIn').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f||!target)return;const id=target;
+  const im=new Image();im.onload=async()=>{
+    const s=480,cv=document.createElement('canvas');cv.width=cv.height=s;
+    const k=Math.min(im.width,im.height);cv.getContext('2d').drawImage(im,(im.width-k)/2,(im.height-k)/2,k,k,0,0,s,s);
+    media[id]=media[id]||{};media[id].img=cv.toDataURL('image/jpeg',.85);URL.revokeObjectURL(im.src);
+    await saveMedia(id);renderPanel();
+  };im.src=URL.createObjectURL(f);
+});
+
+/* voice: mic when allowed, else tablet recorder / audio file */
+let recId=null,rec=null,chunks=[];
+async function startRec(key){
+  stopRec();
+  try{
+    const st=await navigator.mediaDevices.getUserMedia({audio:true});
+    rec=new MediaRecorder(st);chunks=[];recId=key;
+    rec.ondataavailable=ev=>chunks.push(ev.data);
+    rec.onstop=async()=>{st.getTracks().forEach(t=>t.stop());media[key]=media[key]||{};media[key].aud=new Blob(chunks,{type:rec.mimeType||'audio/webm'});delete urls[key];await saveMedia(key);recId=null;rec=null;renderPanel()};
+    rec.start();renderPanel();setTimeout(()=>{if(recId===key)stopRec()},6000);
+  }catch(err){recId=null;target=key;$('#audIn').value='';$('#audIn').click()}
+}
+function stopRec(){try{if(rec&&rec.state!=='inactive')rec.stop()}catch(e){}}
+$('#audIn').addEventListener('change',async e=>{const f=e.target.files[0];if(!f||!target)return;media[target]=media[target]||{};media[target].aud=f;delete urls[target];await saveMedia(target);renderPanel()});
+
+let armed=false;
+$('#reset').addEventListener('click',async()=>{
+  if(!armed){armed=true;$('#resetAsk').textContent='Tekan sekali lagi untuk sahkan.';setTimeout(()=>{armed=false;$('#resetAsk').textContent=''},4000);return}
+  armed=false;for(const k of Object.keys(media))await del('m_'+k);
+  S=fresh();media={};urls={};save();$('#resetAsk').textContent='Sudah dipadam.';renderPanel();
+});
+
+/* load */
+(async()=>{
+  try{
+    const s=await get('state');if(s&&s.items)S={...fresh(),...s};
+    const keys=[...S.items.map(i=>i.id),...S.praise.map((_,i)=>'p'+i)];
+    for(const k of keys){const m=await get('m_'+k);if(m)media[k]=m}
+  }catch(e){}
+  newQ(false);
+})();
+newQ(false);
+try{speechSynthesis&&speechSynthesis.getVoices()}catch(e){}
+}
+</script>
+</body>
+</html>
